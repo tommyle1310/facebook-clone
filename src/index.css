@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tw-hv {
+    @apply hover:duration-200
+}
+
+.tw-jb {
+    @apply flex justify-between items-center
+}
+
+.tw-fc {
+    @apply flex flex-col
+}
+
+.tw-ic {
+    @apply flex items-center
+}
+
+.tw-cc {
+    @apply flex justify-center items-center
+}
