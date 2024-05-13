@@ -17,6 +17,10 @@ export default function MainLayout() {
             setIsShowSidebar(true)
             setIsShowSidebarRight(true)
         }
+        else if (pathname.includes('/groups') || pathname === '/groups') {
+            setIsShowSidebar(true)
+            setIsShowSidebarRight(false)
+        }
         else {
             setIsShowSidebar(false)
             setIsShowSidebarRight(false)
@@ -42,7 +46,7 @@ export default function MainLayout() {
                     <Chat />
                     <div className="p-5  min-h-screen flex-1 flex">
                         {/* main content */}
-                        <div className={`w-full  ${isShowSidebar && 'md:max-w-2xl'}`}>
+                        <div className={`w-full  ${isShowSidebarRight && 'md:max-w-2xl'}`}>
                             <Outlet />
                         </div>
 
