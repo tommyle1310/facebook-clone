@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const SubbarRight = () => {
     return (
         <div className="flex-1 z-10">
-            <div className="max-w-[28rem] sticky ml-10 min-h-screen p-3 top-16 flex flex-col gap-3 ">
+            <div className="max-w-[28rem] fixed ml-10 min-h-screen p-3 top-16 flex flex-col gap-3 ">
                 <div className="overflow-y-auto">
 
                     {/* sponsored */}

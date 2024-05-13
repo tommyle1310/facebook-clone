@@ -96,7 +96,7 @@ const Chat = () => {
                         </div>
                         <div className="flex-1 bg-base-100 overflow-y-auto px-3">
                             {item.chatContent.map(chatItem => (
-                                <div className={`chat ${chatItem.sender ? 'chat-start' : 'chat-end'}`}>
+                                <div key={item.id} className={`chat ${chatItem.sender ? 'chat-start' : 'chat-end'}`}>
                                     {chatItem.sender &&
                                         <div className="chat-image avatar">
                                             <div className="w-6 rounded-full">

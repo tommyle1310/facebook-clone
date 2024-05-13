@@ -1,13 +1,28 @@
-import { Link, Outlet } from "react-router-dom";
-import useTheme from "../../hooks/useTheme";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Chat from "../../components/Chat";
 import Nav from "../../components/Nav";
 import SubbarRight from "../../components/Sidebar/SubbarRight";
+import { useEffect, useState } from "react";
 
 
 export default function MainLayout() {
-    const { theme, toggleTheme } = useTheme()
+    const { pathname } = useLocation()
+
+    const [isShowSidebar, setIsShowSidebar] = useState(false)
+    const [isShowSidebarRight, setIsShowSidebarRight] = useState(false)
+
+    useEffect(() => {
+        if (pathname === '/') {
+            setIsShowSidebar(true)
+            setIsShowSidebarRight(true)
+        }
+        else {
+            setIsShowSidebar(false)
+            setIsShowSidebarRight(false)
+        }
+    }, [pathname])
+
     return (
         <>
             <div className="min-h-screen  ">
@@ -16,20 +31,29 @@ export default function MainLayout() {
                 <div className="flex relative">
 
                     {/* side bar */}
-                    <div className="w-80">
-                        <Sidebar />
-                    </div>
+                    {isShowSidebar &&
+
+                        <div className="w-80 max-lg:hidden">
+                            <Sidebar />
+                        </div>
+                    }
 
                     {/* chat */}
                     <Chat />
                     <div className="p-5  min-h-screen flex-1 flex">
                         {/* main content */}
-                        <div className="xl:max-w-3xl max-w-xl lg:max-w-2xl">
+                        <div className={`w-full  ${isShowSidebar && 'md:max-w-2xl'}`}>
                             <Outlet />
                         </div>
 
                         {/* subsidebarRight */}
-                        <SubbarRight />
+                        {isShowSidebarRight &&
+
+                            <div className="max-lg:hidden">
+
+                                <SubbarRight />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

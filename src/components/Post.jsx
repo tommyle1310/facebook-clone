@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Post = () => {
     return (
-        <div className=" p-5 flex flex-col bg-base-300 my-5 rounded-lg gap-2">
+        <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
             <div className="flex items-center justify-between gap-5 w-full ">
                 <div className="flex gap-5">
                     <Link to='/profile/asodu' data-tip={'helo world'} className="avatar tooltip">
@@ -39,9 +39,9 @@ const Post = () => {
             </div>
             <div className="flex justify-between items-center ">
                 <div className="join gap-1">
-                    <i className="fa-solid fa-face-laugh-squint"></i>
-                    <i className="fa-solid fa-thumbs-up"></i>
-                    <i className="fa-solid fa-face-sad-tear"></i>
+                    <i className="text-warning fa-solid fa-face-laugh-squint"></i>
+                    <i className="text-primary fa-solid fa-thumbs-up"></i>
+                    <i className="text-warning fa-solid fa-face-sad-tear"></i>
                 </div>
                 <div className="flex items-center gap-5">
                     <p className='text-sm'>238 comments</p>
