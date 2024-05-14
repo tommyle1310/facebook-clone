@@ -1,6 +1,7 @@
 import React from 'react'
 import IntroSection from '../components/IntroSection'
 import Post from '../components/Post'
+import CreateSection from '../components/CreateSection'
 
 const GroupPage = () => {
     return (
@@ -31,6 +32,8 @@ const GroupPage = () => {
                     <div className="divider"></div>
                     <div className="min-h-screen flex gap-3">
                         <div className="basis-7/12 tw-fc gap-3">
+                            <CreateSection />
+
                             <Post />
                             <Post />
                             <Post />

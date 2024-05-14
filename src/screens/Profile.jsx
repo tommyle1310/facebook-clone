@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Post from '../components/Post'
 import IntroSection from '../components/IntroSection';
+import CreateSection from '../components/CreateSection';
+import FriendSuggestion from '../components/FriendSuggestion';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -112,7 +114,12 @@ const Profile = () => {
 
                             </div>
                         </div>
-                        <div className="gap-3  tw-fc basis-7/12">
+                        <div className="gap-3 tw-fc basis-7/12">
+                            <CreateSection />
+                            <div className="max-w-[38rem]">
+
+                                <FriendSuggestion />
+                            </div>
                             <Post />
                             <Post />
                             <Post />

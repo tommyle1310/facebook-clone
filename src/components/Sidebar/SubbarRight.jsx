@@ -26,7 +26,7 @@ const SubbarRight = () => {
                     <div className="divider"></div>
 
                     {/* friend request */}
-                    <div className="p-3 tw-fc">
+                    <div className="p-3 tw-fc gap-2">
                         <div className="flex tw-jb">
                             <h5 className="text-lg font-semibold">Friend requests</h5>
                             <Link to='/friends' className="text-info tw-hv hover:text-primary">See All</Link>

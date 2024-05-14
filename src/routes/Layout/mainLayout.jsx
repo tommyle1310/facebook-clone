@@ -11,21 +11,29 @@ export default function MainLayout() {
 
     const [isShowSidebar, setIsShowSidebar] = useState(false)
     const [isShowSidebarRight, setIsShowSidebarRight] = useState(false)
+    const [typePage, setTypePage] = useState('Home')
 
     useEffect(() => {
+        // Log the pathname for debugging purposes
+        console.log("Current pathname:", pathname);
+
         if (pathname === '/') {
-            setIsShowSidebar(true)
-            setIsShowSidebarRight(true)
+            setIsShowSidebar(true);
+            setIsShowSidebarRight(true);
+            setTypePage('Home');
         }
-        else if (pathname.includes('/groups') || pathname === '/groups') {
-            setIsShowSidebar(true)
-            setIsShowSidebarRight(false)
+        else if (pathname.startsWith('/groups')) {
+            setIsShowSidebar(true);
+            setIsShowSidebarRight(false);
+            setTypePage('Groups');
         }
         else {
-            setIsShowSidebar(false)
-            setIsShowSidebarRight(false)
+            setIsShowSidebar(false);
+            setIsShowSidebarRight(false);
+            setTypePage('Home');
         }
-    }, [pathname])
+    }, [pathname]);
+
 
     return (
         <>
@@ -38,7 +46,7 @@ export default function MainLayout() {
                     {isShowSidebar &&
 
                         <div className="w-80 max-lg:hidden">
-                            <Sidebar />
+                            <Sidebar typePage={typePage} />
                         </div>
                     }
 
