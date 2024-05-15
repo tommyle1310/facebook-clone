@@ -10,7 +10,9 @@ import Home from './screens/Home';
 import AuthLayout from './routes/Layout/authLayout';
 import Login from './screens/Login';
 import Profile from './screens/Profile';
-import GroupPage from './screens/GroupPage';
+import GroupPage from './screens/Groups/GroupPage';
+import WatchPage from './screens/WatchPage';
+import JoinedGroupsPage from './screens/Groups/JoinedGroupsPage';
 
 
 const router = createBrowserRouter([
@@ -32,13 +34,19 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/groups/:id",
+        path: "/groups",
         element: <GroupPage />,
+        children: [
+          {
+            path: "/groups/:type",
+            element: <GroupPage />,
+          },
+        ]
       },
-      // {
-      //   path: "/groups",
-      //   element: <AllGroupPage />,
-      // },
+      {
+        path: "/watch",
+        element: <WatchPage />,
+      },
     ],
   },
   {

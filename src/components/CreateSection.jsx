@@ -10,7 +10,63 @@ const CreateSection = () => {
                         <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                     </div>
                 </Link>
-                <input type="text" placeholder="Share something..." className="input input-bordered input-primary w-full" />
+                <input type="text" onClick={() => document.getElementById('my_modal_5').showModal()} placeholder="Share something..." className="input input-bordered input-primary w-full" />
+                {/* modal below */}
+                <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                    <div className="modal-box">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                        <div className="tw-fc gap-3">
+                            <h3 className='text-center text-xl font-bold'>Create post</h3>
+                            <div className="divider"></div>
+                            <div className="tw-ic gap-3">
+                                <div className="avatar">
+                                    <div className="w-10 rounded-full">
+                                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                    </div>
+                                </div>
+                                <div className="tw-fc">
+                                    <h5 className='font-semibold'>Tommy Le</h5>
+                                    <div tabIndex={0} className='font-semibold dropdown  gap-1 text-xs bg-neutral px-2 py-1 cursor-pointer rounded-md tw-jb'>
+                                        <i className="fa-solid fa-user-group"></i>
+                                        <span>Friends</span>
+                                        <i className="fa-solid fa-caret-down"></i>
+
+                                        {/* dropdown  */}
+                                        <ul tabIndex={0} className="dropdown-content z-[1] -right-[13rem] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                            <li><a>Public</a></li>
+                                            <li><a>Friends</a></li>
+                                            <li><a>Private</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <textarea className="textarea  w-full" placeholder="What's on your mind dog?"></textarea>
+                            <div className="px-3 py-1 rounded-md border-secondary border tw-jb">
+                                <p className='font-semibold'>Add to your post</p>
+                                <div className="tw-ic gap-1">
+                                    <button className="btn btn-circle text-xs">
+                                        <i className="fa-solid text-success fa-image"></i>
+                                    </button>
+                                    <button className="btn btn-circle text-xs">
+                                        <i className="fa-solid text-info fa-user-tag"></i>
+                                    </button>
+                                    <button className="btn btn-circle text-xs">
+                                        <i className="fa-solid text-warning fa-face-kiss"></i>
+                                    </button>
+                                    <button className="btn btn-circle text-xs">
+                                        <i className="fa-solid text-error fa-location-dot"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button className="w-full btn btn-neutral">Post</button>
+                        </div>
+                    </div>
+                </dialog>
+
+
             </div>
             <div className="divider"></div>
             <div className="join w-full mx-auto ">

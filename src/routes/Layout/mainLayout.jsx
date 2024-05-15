@@ -14,25 +14,42 @@ export default function MainLayout() {
     const [typePage, setTypePage] = useState('Home')
 
     useEffect(() => {
-        // Log the pathname for debugging purposes
-        console.log("Current pathname:", pathname);
-
-        if (pathname === '/') {
-            setIsShowSidebar(true);
-            setIsShowSidebarRight(true);
-            setTypePage('Home');
-        }
-        else if (pathname.startsWith('/groups')) {
-            setIsShowSidebar(true);
-            setIsShowSidebarRight(false);
-            setTypePage('Groups');
-        }
-        else {
-            setIsShowSidebar(false);
-            setIsShowSidebarRight(false);
-            setTypePage('Home');
+        switch (true) {
+            case pathname === '/':
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(true);
+                setTypePage('Home');
+                break;
+            case pathname.startsWith('/groups/discover'):
+            case pathname.startsWith('/groups/feed'):
+            case pathname.startsWith('/groups/joined-groups'):
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(false);
+                setTypePage('Groups');
+                break;
+            case /^\/groups\/[^/]+$/.test(pathname):
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(false);
+                setTypePage('GroupWithId');
+                break;
+            case pathname.startsWith('/groups'):
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(false);
+                setTypePage('Groups');
+                break;
+            case pathname.startsWith('/watch'):
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(false);
+                setTypePage('Watch');
+                break;
+            default:
+                setIsShowSidebar(false);
+                setIsShowSidebarRight(false);
+                setTypePage('Home');
+                break;
         }
     }, [pathname]);
+
 
 
     return (

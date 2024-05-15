@@ -1,0 +1,32 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+const IntroSidebarSection = ({ title, navData }) => {
+    return (
+        <div className="tw-fc gap-3">
+            {title &&
+                <>
+                    <div className="tw-jb">
+                        <h3 className='text-xl font-bold'>{title}</h3>
+                        <button className="btn btn-circle"><i className="fa-solid fa-gear"></i></button>
+                    </div>
+                    <label className="input input-bordered flex items-center gap-2">
+                        <input type="text" className="grow" placeholder={`Search ${title}`} />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
+                    </label>
+                </>
+            }
+            <div className="tw-fc">
+                {navData?.map((item, index) => (
+
+                    <Link key={index} to={item.url} className="px-3 py-2 tw-hv hover:bg-base-300 gap-3 rounded-box tw-ic">
+                        {item.icon}
+                        {item.name}
+                    </Link>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export default IntroSidebarSection
