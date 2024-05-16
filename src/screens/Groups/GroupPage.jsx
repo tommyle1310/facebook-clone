@@ -4,6 +4,7 @@ import Post from '../../components/Post'
 import CreateSection from '../../components/CreateSection'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import GroupCardItem from '../../components/GroupCardItem'
+import PageNav from '../../components/PageNav'
 
 const GroupPage = () => {
     const { type } = useParams();
@@ -75,6 +76,13 @@ const GroupPage = () => {
         </div>
 
     )
+    const renderCreatePage = () => (
+        <div className="mt-10">
+            <IntroSection data={{ title: 'Group Name', members: 1, }} disabled permissions={{ allowShare: true }} />
+            <div className="divider mt-20"></div>
+            <PageNav />
+        </div>
+    )
 
     const renderGroupPage = () => {
         switch (type) {
@@ -87,6 +95,8 @@ const GroupPage = () => {
                 return renderDiscover()
             case 'joined-groups':
                 return renderJoinedGroups()
+            case 'create':
+                return renderCreatePage()
             // each group
             case /^\/groups\/[^/]+$/.test(type):
                 return (
@@ -268,6 +278,7 @@ const GroupPage = () => {
                 )
         }
     }
+
     return (
         <>
             {renderGroupPage()}

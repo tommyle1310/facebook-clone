@@ -1,8 +1,8 @@
 import React from 'react'
 
-const IntroSection = ({ isProfilePage, isPublic, permissions, isAdmin, data }) => {
+const IntroSection = ({ isProfilePage, isPublic, permissions, isAdmin, data, disabled }) => {
     return (
-        <div className="h-80 w-full bg-accent rounded-b-xl relative">
+        <div className="h-80 w-full bg-accent rounded-b-xl relative ">
             {isProfilePage &&
                 <div className="absolute -bottom-20 border-base-100 left-10 size-40 overflow-hidden rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />

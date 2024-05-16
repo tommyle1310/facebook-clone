@@ -20,6 +20,11 @@ export default function MainLayout() {
                 setIsShowSidebarRight(true);
                 setTypePage('Home');
                 break;
+            case pathname.startsWith('/groups/create'):
+                setIsShowSidebar(true);
+                setIsShowSidebarRight(false);
+                setTypePage('GroupCreate');
+                break
             case pathname.startsWith('/groups/discover'):
             case pathname.startsWith('/groups/feed'):
             case pathname.startsWith('/groups/joined-groups'):

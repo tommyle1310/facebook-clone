@@ -7,8 +7,10 @@ const Nav = () => {
     const { theme, toggleTheme } = useTheme()
     const { pathname } = useLocation()
     const handleStyleActiveTabLink = (type) => {
-        if (pathname === type) {
-            return "btn bg-primary join-item hover:bg-secondary"; // Apply active style
+        if (type === '/' && pathname === '/') {
+            return "btn bg-primary join-item hover:bg-secondary"; // Apply active style for '/'
+        } else if (type !== '/' && pathname.startsWith(type)) {
+            return "btn bg-primary join-item hover:bg-secondary"; // Apply active style for other paths starting with type
         } else {
             return "btn hover:bg-primary join-item"; // Apply default style
         }

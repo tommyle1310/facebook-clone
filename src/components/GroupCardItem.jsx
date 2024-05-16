@@ -6,7 +6,7 @@ const GroupCardItem = () => {
             <div className="aspect-video bg-accent"></div>
             <div className="tw-fc p-3">
                 <h5 className='text-lg font-bold'>Eat Collapse Saigon</h5>
-                <p className='tw-ic'>
+                <p className='tw-ic gap-3 text-sm'>
                     <span>753k members</span>
                     <span>7 posts a day</span>
                 </p>

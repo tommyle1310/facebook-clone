@@ -89,6 +89,42 @@ const Sidebar = ({ typePage }) => {
         </div>
     );
 
+    const renderGroupCreateLinks = () => (
+        <div className="tw-fc gap-3">
+            <Link to='/groups' className="btn btn-circle btn-neutral"><i className="fa-solid fa-xmark"></i></Link>
+            <div className="text-xs breadcrumbs">
+                <ul>
+                    <li><Link to='/groups'>Groups</Link></li>
+                    <li>Create</li>
+                </ul>
+            </div>
+            <h5 className='text-xl font-bold'>Create Group</h5>
+            <div className="tw-ic gap-3">
+                <div className="avatar">
+                    <div className="w-10 rounded-full">
+                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    </div>
+                </div>
+                <div className="tw-fc">
+                    <h5 className='font-bold'>Tommy Le</h5>
+                    <p className='text-xs'>Admin</p>
+                </div>
+            </div>
+            <label className="input  input-bordered flex items-center gap-2">
+                <input type="text" className="grow cursor-pointer" placeholder="Group Name" />
+            </label>
+            <label className="input  input-bordered flex items-center gap-2">
+                <input type="text" className="grow cursor-pointer" placeholder="Group Privacy" />
+                <i className="fa-solid fa-caret-down cursor-pointer"></i>
+            </label>
+            <label className="input  input-bordered flex items-center gap-2">
+                <input type="text" className="grow cursor-pointer" placeholder="Invite Friends" />
+                <span className="badge badge-info text-xs cursor-pointer">Optional</span>
+            </label>
+            <button className="btn w-full bg-neutral ">Create</button>
+        </div>
+    )
+
     const renderWatchLinks = () => (
 
         <IntroSidebarSection title='Videos' navData={[
@@ -109,6 +145,8 @@ const Sidebar = ({ typePage }) => {
                 return renderGroupsLinks();
             case 'GroupWithId':
                 return renderGroupWithIdLinks();
+            case 'GroupCreate':
+                return renderGroupCreateLinks();
             case 'Watch':
                 return renderWatchLinks();
             // Add other cases as needed
