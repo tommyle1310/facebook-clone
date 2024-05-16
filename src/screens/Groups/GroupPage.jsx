@@ -100,7 +100,7 @@ const GroupPage = () => {
             // each group
             case /^\/groups\/[^/]+$/.test(type):
                 return (
-                    <div className='pt-10 w-full '>
+                    <div className='pt-10 w-full min-h-screen '>
                         <div className="  max-w-screen-lg mx-auto">
                             <IntroSection data={{ title: 'ReactJS Dummies', members: 21122 }} permissions={{ allowShare: true }} />
                             <div className="min-h-screen w-full mt-24">
@@ -193,35 +193,12 @@ const GroupPage = () => {
                         <div className="  max-w-screen-lg mx-auto">
                             <IntroSection data={{ title: 'ReactJS Dummies', members: 21122 }} permissions={{ allowShare: true }} />
                             <div className="min-h-screen w-full mt-24">
-                                <div className="divider"></div>
-                                <div className="tw-jb">
-                                    <div role="tablist" className="tabs tabs-boxed ">
-                                        <a role="tab" className="tab tw-hv hover:bg-base-300 tab-active">Posts</a>
-                                        <a role="tab" className="tab tw-hv hover:bg-base-300 ">Description</a>
-                                        <a role="tab" className="tab tw-hv hover:bg-base-300">Friends</a>
-                                        <a role="tab" className="tab tw-hv hover:bg-base-300">Images Uploaded</a>
-                                        <a role="tab" className="tab tw-hv hover:bg-base-300">Videos Uploaded</a>
-                                        <div role="tab" className="tab tw-hv hover:bg-base-300 tw-ic gap-2 dropdown">
-                                            <div tabIndex={0} role="button" className=" m-1"> More <i className="fa-solid fa-chevron-down text-xs"></i></div>
-                                            <ul tabIndex={0} className="dropdown-content -bottom-24 left-1 menu shadow bg-base-100 rounded-box w-52">
-                                                <li><a>Item 1</a></li>
-                                                <li><a>Item 2</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <button className='btn btn-ghost btn-circle'>
-                                        <i className="fa-solid fa-ellipsis"></i>
-                                    </button>
-                                </div>
-                                <div className="divider"></div>
-                                <div className="min-h-screen flex gap-3">
-                                    <div className="basis-7/12 tw-fc gap-3">
-                                        <CreateSection />
+                                <div className="divider max-md:mt-48"></div>
 
-                                        <Post />
-                                        <Post />
-                                        <Post />
-                                    </div>
+                                <PageNav />
+                                <div className="divider"></div>
+                                <div className="min-h-screen md:flex   gap-3">
+
                                     <div className="basis-5/12 tw-fc gap-3">
                                         <div className="bg-base-300 tw-fc p-3 gap-3 rounded-box overflow-hidden">
                                             <div className="tw-jb">
@@ -270,6 +247,13 @@ const GroupPage = () => {
                                             </div>
                                             <button className="btn btn-neutral">See All</button>
                                         </div>
+                                    </div>
+                                    <div className="basis-7/12 tw-fc gap-3 mb-3">
+                                        <CreateSection />
+
+                                        <Post />
+                                        <Post />
+                                        <Post />
                                     </div>
                                 </div>
                             </div>

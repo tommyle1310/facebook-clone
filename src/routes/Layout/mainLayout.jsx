@@ -5,68 +5,57 @@ import Nav from "../../components/Nav";
 import SubbarRight from "../../components/Sidebar/SubbarRight";
 import { useEffect, useState } from "react";
 
+// Helper function to determine the type of page
+const getPageType = (pathname) => {
+    console.log(pathname);
+    switch (true) {
+        case pathname.startsWith('/groups/create'):
+            return { showSidebar: true, showSidebarRight: false, type: 'GroupCreate' };
+        case pathname.startsWith('/groups/discover'):
+        case pathname.startsWith('/groups/feed'):
+        case pathname.startsWith('/groups/joined-groups'):
+            return { showSidebar: true, showSidebarRight: false, type: 'Groups' };
+        case /^\/groups\/[^/]+$/.test(pathname):
+            return { showSidebar: true, showSidebarRight: false, type: 'GroupWithId' };
+        case pathname.startsWith('/groups'):
+            return { showSidebar: true, showSidebarRight: false, type: 'Groups' };
+
+        case pathname.startsWith('/watch/live'):
+        case pathname.startsWith('/watch/reel'):
+        case pathname.startsWith('/watch/explore'):
+        case pathname.startsWith('/watch/saved'):
+            return { showSidebar: true, showSidebarRight: false, type: 'Watch' };
+        case pathname.startsWith('/watch'):
+            return { showSidebar: true, showSidebarRight: false, type: 'Watch' };
+
+        case pathname === '/':
+        default:
+            return { showSidebar: true, showSidebarRight: true, type: 'Home' };
+    }
+};
+
 
 export default function MainLayout() {
-    const { pathname } = useLocation()
-
-    const [isShowSidebar, setIsShowSidebar] = useState(false)
-    const [isShowSidebarRight, setIsShowSidebarRight] = useState(false)
-    const [typePage, setTypePage] = useState('Home')
+    const { pathname } = useLocation();
+    const [isShowSidebar, setIsShowSidebar] = useState(false);
+    const [isShowSidebarRight, setIsShowSidebarRight] = useState(false);
+    const [typePage, setTypePage] = useState('Home');
 
     useEffect(() => {
-        switch (true) {
-            case pathname === '/':
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(true);
-                setTypePage('Home');
-                break;
-            case pathname.startsWith('/groups/create'):
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(false);
-                setTypePage('GroupCreate');
-                break
-            case pathname.startsWith('/groups/discover'):
-            case pathname.startsWith('/groups/feed'):
-            case pathname.startsWith('/groups/joined-groups'):
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(false);
-                setTypePage('Groups');
-                break;
-            case /^\/groups\/[^/]+$/.test(pathname):
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(false);
-                setTypePage('GroupWithId');
-                break;
-            case pathname.startsWith('/groups'):
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(false);
-                setTypePage('Groups');
-                break;
-            case pathname.startsWith('/watch'):
-                setIsShowSidebar(true);
-                setIsShowSidebarRight(false);
-                setTypePage('Watch');
-                break;
-            default:
-                setIsShowSidebar(false);
-                setIsShowSidebarRight(false);
-                setTypePage('Home');
-                break;
-        }
+        const { showSidebar, showSidebarRight, type } = getPageType(pathname);
+        setIsShowSidebar(showSidebar);
+        setIsShowSidebarRight(showSidebarRight);
+        setTypePage(type);
     }, [pathname]);
-
-
 
     return (
         <>
-            <div className="min-h-screen  ">
+            <div className="min-h-screen w-full ">
                 {/* nav */}
                 <Nav />
-                <div className="flex relative">
-
+                <div className="flex relative w-full ">
                     {/* side bar */}
                     {isShowSidebar &&
-
                         <div className="w-80 max-lg:hidden">
                             <Sidebar typePage={typePage} />
                         </div>
@@ -74,17 +63,15 @@ export default function MainLayout() {
 
                     {/* chat */}
                     <Chat />
-                    <div className="p-5  min-h-screen flex-1 flex">
+                    <div className="p-5  w-full min-h-screen flex-1 flex">
                         {/* main content */}
-                        <div className={`w-full  ${isShowSidebarRight && 'md:max-w-2xl'}`}>
+                        <div className={`w-full  ${isShowSidebarRight ? 'md:max-w-2xl' : ''}`}>
                             <Outlet />
                         </div>
 
                         {/* subsidebarRight */}
                         {isShowSidebarRight &&
-
                             <div className="max-lg:hidden">
-
                                 <SubbarRight />
                             </div>
                         }

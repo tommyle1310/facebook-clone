@@ -46,6 +46,12 @@ const router = createBrowserRouter([
       {
         path: "/watch",
         element: <WatchPage />,
+        children: [
+          {
+            path: "/watch/:type",
+            element: <WatchPage />,
+          },
+        ]
       },
     ],
   },

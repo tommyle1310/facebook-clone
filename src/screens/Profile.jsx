@@ -3,13 +3,14 @@ import Post from '../components/Post'
 import IntroSection from '../components/IntroSection';
 import CreateSection from '../components/CreateSection';
 import FriendSuggestion from '../components/FriendSuggestion';
+import PageNav from '../components/PageNav';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
         const timeout = setTimeout(() => {
             setIsLoading(false);
-        }, 3000); // Simulating a 3-second loading time
+        }, 1000); // Simulating a 3-second loading time
 
         return () => clearTimeout(timeout);
     }, []);
@@ -17,31 +18,13 @@ const Profile = () => {
 
     if (isLoading) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
     return (
-        <div className='pt-10 max-w-screen-lg mx-auto'>
-            <div className="tw-fc  w-full min-h-screen">
-                <IntroSection isProfilePage={true} data={{ name: 'Tommy Le', friends: 2 }} />
-                <div className="min-h-screen w-full mt-24">
-                    <div className="tw-jb">
-                        <div role="tablist" className="tabs tabs-boxed ">
-                            <a role="tab" className="tab tw-hv hover:bg-base-300 tab-active">Posts</a>
-                            <a role="tab" className="tab tw-hv hover:bg-base-300 ">Description</a>
-                            <a role="tab" className="tab tw-hv hover:bg-base-300">Friends</a>
-                            <a role="tab" className="tab tw-hv hover:bg-base-300">Images Uploaded</a>
-                            <a role="tab" className="tab tw-hv hover:bg-base-300">Videos Uploaded</a>
-                            <div role="tab" className="tab tw-hv hover:bg-base-300 tw-ic gap-2 dropdown">
-                                <div tabIndex={0} role="button" className=" m-1"> More <i className="fa-solid fa-chevron-down text-xs"></i></div>
-                                <ul tabIndex={0} className="dropdown-content -bottom-24 left-1 menu shadow bg-base-100 rounded-box w-52">
-                                    <li><a>Item 1</a></li>
-                                    <li><a>Item 2</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <button className='btn btn-ghost btn-circle'>
-                            <i className="fa-solid fa-ellipsis"></i>
-                        </button>
-                    </div>
+        <div className='pt-10 w-full  '>
+            <div className="tw-fc  w-full  min-h-screen">
+                <IntroSection isProfilePage data={{ name: 'Tommy Le', friends: 2 }} />
+                <div className="min-h-screen w-full mt-24 max-md:mt-60">
+                    <PageNav />
                     <div className="divider"></div>
-                    <div className="flex gap-5">
+                    <div className="md:flex gap-5">
                         <div className=" tw-fc gap-5  sticky basis-5/12">
                             <div className="bg-base-300 tw-fc p-3 gap-2 rounded-box overflow-hidden">
                                 <h5 className='text-lg font-bold'>Description</h5>
@@ -49,7 +32,7 @@ const Profile = () => {
                                 <div className="tw-ic gap-1"><i className="fa-solid fa-house-chimney"></i>Live in Saigon</div>
                                 <div className="tw-ic gap-1"><i className="fa-solid fa-location-dot"></i>Live in Saigon</div>
                                 <button className='btn w-full hover:opacity-80'>Edit my posts</button>
-                                <div className="w-36 rounded-box h-56 overflow-hidden group tw-hv hover:opacity-80 cursor-pointer">
+                                <div className="w-36 max-md:w-24 rounded-box h-56 max-md:h-36 overflow-hidden group tw-hv hover:opacity-80 cursor-pointer">
                                     <img className='object-cover group-hover:scale-105 tw-hv w-full h-full' src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                                 </div>
                                 <button className='btn w-full hover:opacity-80'>Edit Featured</button>

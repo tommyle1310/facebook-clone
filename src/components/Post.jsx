@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 const Post = () => {
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
-            <div className="flex items-center justify-between gap-5 w-full ">
+            <div className="flex items-center justify-between gap-5 w-full max-md:text-xs">
                 <div className="flex gap-5">
                     <Link to='/profile/asodu' data-tip={'helo world'} className="avatar tooltip">
-                        <div className="w-10 rounded-full">
+                        <div className="w-8 rounded-full">
                             <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                         </div>
                     </Link>
@@ -18,15 +18,15 @@ const Post = () => {
                         </svg>
                         </p>
                     </div>
-                    <div className=' items-start cursor-pointer tw-hv hover:text-primary py-0  text-info  text-sm font-semibold'>Follow</div>
+                    <div className='max-md:hidden items-start cursor-pointer tw-hv hover:text-primary py-0  text-info  text-sm font-semibold'>Follow</div>
                 </div>
                 <div className="gap-3 flex items-center">
-                    <button className='btn btn-ghost btn-circle'>
+                    <button className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                         </svg>
                     </button>
-                    <button className='btn btn-ghost btn-circle'>
+                    <button className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
@@ -39,20 +39,20 @@ const Post = () => {
             </div>
             <div className="flex justify-between items-center ">
                 <div className="join gap-1">
-                    <i className="text-warning fa-solid fa-face-laugh-squint"></i>
-                    <i className="text-primary fa-solid fa-thumbs-up"></i>
-                    <i className="text-warning fa-solid fa-face-sad-tear"></i>
+                    <i className="text-warning text-xs fa-solid fa-face-laugh-squint"></i>
+                    <i className="text-primary text-xs fa-solid fa-thumbs-up"></i>
+                    <i className="text-warning text-xs fa-solid fa-face-sad-tear"></i>
                 </div>
                 <div className="flex items-center gap-5">
-                    <p className='text-sm'>238 comments</p>
-                    <p className='text-sm'>9999 shares</p>
+                    <p className='text-xs'>238 comments</p>
+                    <p className='text-xs'>9999 shares</p>
                 </div>
             </div>
             <div className="divider -mb-1"></div>
             <div className="join ">
-                <button className='w-1/3 btn  btn-ghost flex items-center '><i className="fa-regular fa-thumbs-up"></i>like</button>
-                <button className='w-1/3 btn  btn-ghost flex items-center '><i className="fa-regular fa-comment"></i>comment</button>
-                <button className='w-1/3 btn  btn-ghost flex items-center '><i className="fa-regular fa-share-from-square"></i>share</button>
+                <button className='w-1/3 btn  btn-ghost flex items-center text-xs'><i className="fa-regular fa-thumbs-up"></i><span className='max-md:hidden'>like</span></button>
+                <button className='w-1/3 btn  btn-ghost flex items-center text-xs'><i className="fa-regular fa-comment"></i><span className='max-md:hidden'>comment</span></button>
+                <button className='w-1/3 btn  btn-ghost flex items-center text-xs'><i className="fa-regular fa-share-from-square"></i><span className='max-md:hidden'>share</span></button>
             </div>
         </div>
     )

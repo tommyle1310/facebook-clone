@@ -62,7 +62,7 @@ const Chat = () => {
         setDisplayChatUsers([...displayChatUsers, itemInput])
     }
     return (
-        <div className="fixed bottom-0 z-20 right-0 flex gap-5 flex-row-reverse ">
+        <div className="fixed bottom-0 z-20 right-0 flex gap-5 flex-row-reverse max-md:hidden">
             <div className="flex flex-col-reverse gap-2 p-3">
                 {
                     displayChatUsers?.slice(-3)?.map(item => (
