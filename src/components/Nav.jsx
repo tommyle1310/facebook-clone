@@ -215,7 +215,7 @@ const Nav = () => {
                         <div tabIndex={0} role='button' className="w-10 overflow-hidden rounded-full">
                             <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                         </div>
-                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 right-0">
+                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-primary shadow-sm bg-base-100 rounded-box w-52 right-0">
                             <li><a>Homepage</a></li>
                             <li><a>Portfolio</a></li>
                             <li><a>About</a></li>

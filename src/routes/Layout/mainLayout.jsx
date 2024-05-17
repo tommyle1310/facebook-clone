@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 // Helper function to determine the type of page
 const getPageType = (pathname) => {
-    console.log(pathname);
+    // console.log(pathname);
     switch (true) {
         case pathname.startsWith('/profile'):
             return { showSidebar: false, showSidebarRight: false };

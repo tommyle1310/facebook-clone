@@ -1,12 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
+import useUserData from '../hooks/useUserData'
 
 const CreateSection = () => {
+    const [user] = useUserData()
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box">
             <div className="flex items-center gap-5 w-full ">
-                <Link to='/profile/sadsa' className="avatar">
+                <Link to={`/profile/${user?.id}`} className="avatar">
                     <div className="w-10 rounded-full">
                         <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                     </div>
@@ -25,7 +27,7 @@ const CreateSection = () => {
                             <div className="tw-ic gap-3">
                                 <Avatar />
                                 <div className="tw-fc">
-                                    <h5 className='font-semibold'>Tommy Le</h5>
+                                    <h5 className='font-semibold'>{user?.name}</h5>
                                     <div tabIndex={0} className='font-semibold dropdown  gap-1 text-xs bg-neutral px-2 py-1 cursor-pointer rounded-md tw-jb'>
                                         <i className="fa-solid fa-user-group"></i>
                                         <span>Friends</span>

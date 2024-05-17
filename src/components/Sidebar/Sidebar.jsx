@@ -10,7 +10,7 @@ const Sidebar = ({ typePage }) => {
     const [user] = useUserData()
     const renderHomeLinks = () => (
         <>
-            <Link to="/profile/:id" className="p-2 flex gap-3 items-center tw-hv hover:bg-base-300 rounded-lg text-lg font-bold">
+            <Link to={`/profile/${user?.id}`} className="p-2 flex gap-3 items-center tw-hv hover:bg-base-300 rounded-lg text-lg font-bold">
                 <Avatar size={8} />
                 {user?.name}
             </Link>

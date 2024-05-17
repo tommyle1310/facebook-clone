@@ -125,11 +125,21 @@ export const signup = ({ email, password, name }, navigate) => async (dispatch) 
         const response = await axios.post('/signup', { email, password, name });
         if (response.data) {
             const { token, email, name } = response.data;
-            localStorage.setItem('token', token);
-            localStorage.setItem('email', email);
-            localStorage.setItem('name', name);
-            dispatch(signUpSuccess({ token, email, name }));
-            navigate('/');
+            if (response.data.EC === 0) {
+
+                localStorage.setItem('token', token);
+                localStorage.setItem('email', email);
+                localStorage.setItem('name', name);
+                dispatch(signUpSuccess({ token, email, name }));
+                navigate('/login');
+            }
+            else if (response.data.EC === 2) {
+                dispatch(addError('Invalid Email or Password'));
+            }
+            else {
+                dispatch(addError('Something went wrong in the server, please try again later.'));
+
+            }
         }
     } catch (error) {
         const errorMessage = error.response ? error.response.data.error : 'Something went wrong with the server';

@@ -5,24 +5,35 @@ import CreateSection from '../components/CreateSection';
 import FriendSuggestion from '../components/FriendSuggestion';
 import PageNav from '../components/PageNav';
 import useUserData from '../hooks/useUserData'
+import { fetchUserDataById } from '../app/features/userSlice';
+import { useDispatch } from 'react-redux';
+import useProfileUserData from '../hooks/useProfileUserData';
+import { useParams } from 'react-router-dom';
+
 
 const Profile = () => {
+    const { id } = useParams()
     const [user] = useUserData()
     const [isLoading, setIsLoading] = useState(true)
+    const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
+    console.log(profileData);
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             setIsLoading(false);
-        }, 1000); // Simulating a 3-second loading time
+        }, 300); // Simulating a 3-second loading time
 
         return () => clearTimeout(timeout);
     }, []);
 
 
-    if (isLoading) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
+
+
+    if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection isProfilePage data={{ name: user.name, friends: 2 }} />
+                <IntroSection isProfilePage data={{ name: profileData?.name, friends: profileData?.officialFriends?.length ?? 0 }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>
