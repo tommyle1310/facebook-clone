@@ -10,32 +10,32 @@ const GroupPage = () => {
     const { type } = useParams();
 
     const renderHomeGroup = () => (
-        <div className='mt-10 grid p-10 grid-cols-2 grid-rows-2 gap-3 w-full h-96'>
-            <Link to='/groups/create' className="rounded-box shadow-lg btn h-full btn-info text-lg tw-hv"><i className="fa-solid fa-plus"></i>Create New Group</Link>
-            <Link to='/groups/discover' className="rounded-box shadow-lg btn h-full btn-warning text-lg tw-hv"><i className="fa-solid fa-compass"></i>Discover</Link>
-            <Link to='/groups/feed' className="rounded-box shadow-lg btn h-full btn-primary text-lg tw-hv"><i className="fa-solid fa-newspaper"></i>Your Feed</Link>
-            <Link to='/groups/joined-groups' className="rounded-box shadow-lg btn h-full btn-success text-lg tw-hv"><i className="fa-solid fa-people-group"></i>Your Groups</Link>
+        <div className='mt-20 grid p-10 grid-cols-2 grid-rows-2 gap-3 w-full h-96 max-md:h-48 tw-r-fc'>
+            <Link to='/groups/create' className="rounded-box shadow-lg btn h-full btn-info text-lg tw-hv max-md:text-md"><i className="fa-solid fa-plus"></i>Create Group</Link>
+            <Link to='/groups/discover' className="rounded-box shadow-lg btn h-full btn-warning text-lg tw-hv max-md:text-md"><i className="fa-solid fa-compass"></i>Discover</Link>
+            <Link to='/groups/feed' className="rounded-box shadow-lg btn h-full btn-primary text-lg tw-hv max-md:text-md"><i className="fa-solid fa-newspaper"></i>Your Feed</Link>
+            <Link to='/groups/joined-groups' className="rounded-box shadow-lg btn h-full btn-success text-lg tw-hv max-md:text-md"><i className="fa-solid fa-people-group"></i>Your Groups</Link>
         </div>
     )
     const renderFeed = () => (
-        <div className='mt-10 w-full  p-3 '>
-            <div className="w-[30rem] tw-fc  gap-3 mx-auto">
+        <div className='mt-10 max-md:mt-20 w-full  p-3 '>
+            <div className="w-[30rem] max-md:w-full tw-fc  gap-3 mx-auto">
                 <h4 className='text-lg font-semibold'>Recent Activities</h4>
                 <div className="rounded-box p-3 tw-cc bg-neutral shadow-md gap-3 tw-fc">
                     <div className="stack">
-                        <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg" className="rounded w-24" />
-                        <img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.jpg" className="rounded w-24" />
-                        <img src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.jpg" className="rounded w-24" />
+                        <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg" className="rounded w-24 max-md:w-12" />
+                        <img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.jpg" className="rounded w-24 max-md:w-12" />
+                        <img src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.jpg" className="rounded w-24 max-md:w-12" />
                     </div>
-                    <h3 className='text-xl font-bold'>You're all caught up</h3>
-                    <p>Check back later for more updates</p>
-                    <Link to='/groups/discover' className="btn btn-primary">Discover more groups</Link>
+                    <h3 className='text-xl font-bold max-md:text-lg'>You're all caught up</h3>
+                    <p className='max-md:text-sm'>Check back later for more updates</p>
+                    <Link to='/groups/discover' className="btn btn-primary max-md:text-xs">Discover more groups</Link>
                 </div>
             </div>
         </div>
     )
     const renderDiscover = () => (
-        <div className='mt-10 tw-fc gap-3 w-full'>
+        <div className='mt-20 tw-fc gap-3 w-full'>
             <div className="tw-jb">
                 <div className="tw-fc">
                     <h4 className='text-xl font-bold'>Friend's groups</h4>
@@ -43,14 +43,14 @@ const GroupPage = () => {
                 </div>
                 <p className=' text-info'>See All</p>
             </div>
-            <div className="grid grid-cols-3 gap-3 w-full ">
+            <div className="grid grid-cols-3 gap-3 w-full tw-r-fc items-center">
                 <GroupCardItem />
                 <GroupCardItem />
                 <GroupCardItem />
             </div>
             <div className="divider"></div>
             <h4 className='text-xl font-bold'>More Suggestions</h4>
-            <div className="grid grid-cols-3 gap-3 w-full ">
+            <div className="grid grid-cols-3 gap-3 w-full tw-r-fc">
                 <GroupCardItem />
                 <GroupCardItem />
                 <GroupCardItem />
@@ -63,9 +63,9 @@ const GroupPage = () => {
 
     )
     const renderJoinedGroups = () => (
-        <div className='mt-10 tw-fc gap-3 w-full h-96'>
+        <div className='mt-20 tw-fc gap-3 w-full h-96'>
             <h4 className='text-xl font-bold'>All groups you've joined</h4>
-            <div className="grid grid-cols-3 gap-3 w-full ">
+            <div className="grid grid-cols-3 gap-3 w-full tw-r-fc">
                 <GroupCardItem />
                 <GroupCardItem />
                 <GroupCardItem />

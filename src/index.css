@@ -25,3 +25,7 @@
 .tw-jc {
     @apply flex justify-center items-center
 }
+
+.tw-r-fc {
+    @apply max-md:flex max-md:flex-col
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Avatar from './Avatar'
 
 const CreateSection = () => {
     return (
@@ -22,11 +23,7 @@ const CreateSection = () => {
                             <h3 className='text-center text-xl font-bold'>Create post</h3>
                             <div className="divider"></div>
                             <div className="tw-ic gap-3">
-                                <div className="avatar">
-                                    <div className="w-10 rounded-full">
-                                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                                    </div>
-                                </div>
+                                <Avatar size={10} />
                                 <div className="tw-fc">
                                     <h5 className='font-semibold'>Tommy Le</h5>
                                     <div tabIndex={0} className='font-semibold dropdown  gap-1 text-xs bg-neutral px-2 py-1 cursor-pointer rounded-md tw-jb'>
@@ -43,8 +40,8 @@ const CreateSection = () => {
                                     </div>
                                 </div>
                             </div>
-                            <textarea className="textarea  w-full" placeholder="What's on your mind dog?"></textarea>
-                            <div className="px-3 py-1 rounded-md border-secondary border tw-jb">
+                            <textarea className="textarea textarea-primary w-full" placeholder="What's on your mind dog?"></textarea>
+                            <div className="px-3 py-2 rounded-md border-secondary tw-r-fc gap-2  border max-md:text-xs tw-jb">
                                 <p className='font-semibold'>Add to your post</p>
                                 <div className="tw-ic gap-1">
                                     <button className="btn btn-circle text-xs">

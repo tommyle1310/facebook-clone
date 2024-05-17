@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 const getPageType = (pathname) => {
     console.log(pathname);
     switch (true) {
+        case pathname.startsWith('/profile'):
+            return { showSidebar: false, showSidebarRight: false };
         case pathname.startsWith('/groups/create'):
             return { showSidebar: true, showSidebarRight: false, type: 'GroupCreate' };
         case pathname.startsWith('/groups/discover'):
@@ -65,7 +67,7 @@ export default function MainLayout() {
                     <Chat />
                     <div className="p-5  w-full min-h-screen flex-1 flex">
                         {/* main content */}
-                        <div className={`w-full  ${isShowSidebarRight ? 'md:max-w-2xl' : ''}`}>
+                        <div className={`w-full   ${isShowSidebarRight ? 'md:max-w-2xl ' : 'mx-auto'}`}>
                             <Outlet />
                         </div>
 

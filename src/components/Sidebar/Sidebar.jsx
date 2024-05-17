@@ -2,16 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import IntroSidebarSection from './IntroSidebarSection';
 import SidebarItemsWithAvatar from './SidebarItemsWithAvatar';
+import Avatar from '../Avatar';
 
 const Sidebar = ({ typePage }) => {
     const renderHomeLinks = () => (
         <>
             <Link to="/profile/:id" className="p-2 flex gap-3 items-center tw-hv hover:bg-base-300 rounded-lg">
-                <div className="avatar">
-                    <div className="w-8 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="profile" />
-                    </div>
-                </div>
+                <Avatar size={8} />
                 Tommy
             </Link>
             <IntroSidebarSection
@@ -100,11 +97,7 @@ const Sidebar = ({ typePage }) => {
             </div>
             <h5 className='text-xl font-bold'>Create Group</h5>
             <div className="tw-ic gap-3">
-                <div className="avatar">
-                    <div className="w-10 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                    </div>
-                </div>
+                <Avatar size={8} />
                 <div className="tw-fc">
                     <h5 className='font-bold'>Tommy Le</h5>
                     <p className='text-xs'>Admin</p>

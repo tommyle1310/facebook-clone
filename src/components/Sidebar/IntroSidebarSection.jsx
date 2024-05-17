@@ -19,7 +19,7 @@ const IntroSidebarSection = ({ title, navData }) => {
             <div className="tw-fc">
                 {navData?.map((item, index) => (
 
-                    <Link key={index} to={item.url} className="px-3 py-2 tw-hv hover:bg-base-300 gap-3 rounded-box tw-ic">
+                    <Link key={index} to={item.url} className={`px-3 py-2 tw-hv hover:bg-base-300 gap-3 rounded-box tw-ic ${item.textColor && item.textColor}`}>
                         {item.icon}
                         {item.name}
                     </Link>

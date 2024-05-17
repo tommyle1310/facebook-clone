@@ -18,7 +18,7 @@ const Profile = () => {
 
     if (isLoading) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
     return (
-        <div className='pt-10 w-full  '>
+        <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
                 <IntroSection isProfilePage data={{ name: 'Tommy Le', friends: 2 }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">

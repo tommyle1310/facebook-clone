@@ -8,11 +8,11 @@ import MainLayoutError from './routes/Layout/mainLayoutError';
 import ErrorPage from './screens/ErrorPage';
 import Home from './screens/Home';
 import AuthLayout from './routes/Layout/authLayout';
-import Login from './screens/Login';
+import Login from './screens/Auth/Login';
+import SignUp from './screens/Auth/SignUp';
 import Profile from './screens/Profile';
 import GroupPage from './screens/Groups/GroupPage';
 import WatchPage from './screens/WatchPage';
-import JoinedGroupsPage from './screens/Groups/JoinedGroupsPage';
 
 
 const router = createBrowserRouter([
@@ -63,6 +63,17 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Login />,
+      },
+    ],
+  },
+  {
+    path: "/signup",
+    element: <AuthLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "",
+        element: <SignUp />,
       },
     ],
   }

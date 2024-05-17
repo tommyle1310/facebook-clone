@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Avatar from '../Avatar'
 
 const SubbarRight = () => {
     return (
@@ -32,11 +33,7 @@ const SubbarRight = () => {
                             <Link to='/friends' className="text-info tw-hv hover:text-primary">See All</Link>
                         </div>
                         <div className="tw-jb gap-3">
-                            <div className="avatar">
-                                <div className="w-10 rounded-full">
-                                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="Tailwind-CSS-Avatar-component" />
-                                </div>
-                            </div>
+                            <Avatar />
                             <div className="flex-1 tw-fc gap-1">
                                 <div className="tw-jb">
                                     <h5 className="font-semibold">Mai Uchiha</h5>

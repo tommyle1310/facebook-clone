@@ -15,6 +15,11 @@ const useTheme = () => {
             case 'aqua':
             case 'synthwave':
             case 'wireframe':
+            case 'forest':
+            case 'lemonade':
+            case 'emerald':
+            case 'fantasy':
+            case 'cmyk':
                 setTheme(selectedTheme);
                 localStorage.setItem("theme", selectedTheme); // Store theme in local storage
                 return;
