@@ -1,9 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useTheme from '../hooks/useTheme'
 import { useLocation } from 'react-router-dom'
 import IntroSidebarSection from '../components/Sidebar/IntroSidebarSection'
 import Avatar from './Avatar'
+import { useDispatch, useSelector } from 'react-redux';
+import useUserData from '../hooks/useUserData'
+import { signout } from '../app/features/authSlice'
+
 
 const notifications = [
     {
@@ -58,6 +62,10 @@ const notifications = [
 ];
 
 const Nav = () => {
+    const [user] = useUserData()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const { theme, toggleTheme } = useTheme()
     const { pathname } = useLocation()
     const handleStyleActiveTabLink = (type) => {
@@ -225,7 +233,7 @@ const Nav = () => {
                                     <div onClick={() => toggleTheme('synthwave')} className="tw-hv hover:bg-base-200 w-full text-center py-2">Synthwave</div>
                                 </div>
                             </li>
-                            <li className=" btn-error btn-outline p-0 rounded-md"><Link to='/login' >Log Out</Link></li>
+                            <li className=" btn-error btn-outline p-0 rounded-md"><div onClick={() => { dispatch(signout(navigate)) }}>Log Out</div></li>
                         </ul>
                     </div>
                 </div>

@@ -23,7 +23,7 @@ const CreateSection = () => {
                             <h3 className='text-center text-xl font-bold'>Create post</h3>
                             <div className="divider"></div>
                             <div className="tw-ic gap-3">
-                                <Avatar size={10} />
+                                <Avatar />
                                 <div className="tw-fc">
                                     <h5 className='font-semibold'>Tommy Le</h5>
                                     <div tabIndex={0} className='font-semibold dropdown  gap-1 text-xs bg-neutral px-2 py-1 cursor-pointer rounded-md tw-jb'>
@@ -62,7 +62,6 @@ const CreateSection = () => {
                         </div>
                     </div>
                 </dialog>
-
 
             </div>
             <div className="divider"></div>

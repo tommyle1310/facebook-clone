@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 const AuthForm = ({ title, onSubmit }) => {
+    const { errorMessage } = (useSelector(state => state.auth))
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -50,11 +52,12 @@ const AuthForm = ({ title, onSubmit }) => {
             <div className={`gap-5 flex-grow card tw-hv md:max-w-md lg:max-w-lg w-full  mx-auto shadow-primary shadow-sm hover:cursor-pointer bg-base-300 rounded-box p-5`}>
                 {title === 'Sign Up' && <div className='text-3xl font-extrabold text-primary p-5'>Facebook</div>}
                 {title === 'Sign Up' && <div className='text-3xl text-center font-bold text-primary pb-5'>Sign Up</div>}
-                <input type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address or phone number" className="input input-bordered input-md w-full" />
+                <input type="text" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address or phone number" className={errorMessage ? 'input input-bordered input-md input-error w-full' : 'input input-bordered input-md w-full'} />
                 {title === 'Sign Up' &&
                     <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Username" className="input input-bordered input-md w-full" />
                 }
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="input input-bordered input-md w-full" />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className={errorMessage ? 'input input-bordered input-md input-error w-full' : 'input input-bordered input-md w-full'} />
+                {errorMessage && <div className='text-error text-center pb-5'>{errorMessage}</div>}
                 <button onClick={() => onSubmit({ name, email, password })} className="btn btn-active btn-primary">{title === 'Login' ? 'Login' : 'Sign Up'}</button>
                 {title === 'Login' && <p className="text-center">Forgotten password?</p>}
                 <div className="divider"></div>

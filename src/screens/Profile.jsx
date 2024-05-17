@@ -4,8 +4,10 @@ import IntroSection from '../components/IntroSection';
 import CreateSection from '../components/CreateSection';
 import FriendSuggestion from '../components/FriendSuggestion';
 import PageNav from '../components/PageNav';
+import useUserData from '../hooks/useUserData'
 
 const Profile = () => {
+    const [user] = useUserData()
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -20,7 +22,7 @@ const Profile = () => {
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection isProfilePage data={{ name: 'Tommy Le', friends: 2 }} />
+                <IntroSection isProfilePage data={{ name: user.name, friends: 2 }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>

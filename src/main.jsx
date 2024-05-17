@@ -13,6 +13,9 @@ import SignUp from './screens/Auth/SignUp';
 import Profile from './screens/Profile';
 import GroupPage from './screens/Groups/GroupPage';
 import WatchPage from './screens/WatchPage';
+import { store, persistor } from './app/store'
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux'
 
 
 const router = createBrowserRouter([
@@ -81,6 +84,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>,
 )

@@ -4,26 +4,22 @@ import { Link } from 'react-router-dom';
 import AuthForm from '../../components/AuthForm';
 import axios from '../../api/axios';
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { signin } from '../../app/features/authSlice';
 
 
 const Login = () => {
-    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const loginUser = async (userData) => {
-        try {
-            const response = await axios.post('/signin', userData);
-            if (response.data.EC === 0) {
-                navigate("/");
-            }
-            return response.data;
-        } catch (error) {
-            console.log(error.data);
-            throw error.data;
-        }
+        dispatch(signin(userData, navigate));
     };
 
     return (
-        <AuthForm title='Login' onSubmit={loginUser} />
+        <>
+            <AuthForm title='Login' onSubmit={loginUser} />
+        </>
     )
 }
 
