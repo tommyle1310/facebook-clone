@@ -3,38 +3,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { fetchFriends, fetchNonFriends, selectUser, toggleAddFriend } from '../app/features/userSlice';
 import { selectAuth } from '../app/features/authSlice';
+import useUserData from '../hooks/useUserData';
+import useFetchFriendsData from '../hooks/useFetchFriendsData';
 
 const FriendSuggestion = () => {
-    const [listUsers, setListUsers] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const dispatch = useDispatch()
 
-    const dispatch = useDispatch();
-    const { id } = useSelector(selectAuth);
-    // const { nonFriends } = useSelector(selectUser);
-    const fetchData = async () => {
-        setIsLoading(true);
-        const resultAction = await dispatch(fetchNonFriends(id));
-        if (fetchNonFriends.fulfilled.match(resultAction)) {
-            setListUsers(resultAction.payload);
-            setIsLoading(false);
-        }
-    };
-    useEffect(() => {
-        fetchData();
-    }, [dispatch, id]);
-
+    const [user] = useUserData()
+    const [nonFriendsData, nonFriendsLoading, refetchNonFriendsData] = useFetchFriendsData(user?.id, fetchNonFriends);
     const handleToggleAddFriend = async ({ userId, friendId }) => {
-        const resultAction = await dispatch(toggleAddFriend({ userId, friendId }));
-        if (toggleAddFriend.fulfilled.match(resultAction)) {
-            fetchData();
-        }
+        await dispatch(toggleAddFriend({ userId, friendId }));
+        // Refetch non-friends data after toggling friend status
+        refetchNonFriendsData();
     };
-    console.log(listUsers);
 
     return (
         <div className=" p-5 tw-fc gap-3 w-full bg-base-300 rounded-box">
             <h5 className='text-lg font-bold max-md:text-sm'>People you may know</h5>
-            {isLoading ? (
+            {nonFriendsLoading ? (
                 // Render loading spinner while data is being fetched
                 <div className="w-full h-24 tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
             ) : (
@@ -42,7 +28,7 @@ const FriendSuggestion = () => {
                 <div>
                     {/* Render your component using friends and nonFriends data */}
                     <div className="carousel carousel-center w-full mx-auto pb-8 p-4 space-x-4 rounded-box">
-                        {listUsers?.map((item) => (
+                        {nonFriendsData?.map((item) => (
                             <div
                                 key={item.id}
                                 className="carousel-item w-48 h-72 p-3 shadow-sm shadow-secondary rounded-md max-md:w-20 relative tw-hv bg-base-200 hover:opacity-90 cursor-pointer"
@@ -58,7 +44,7 @@ const FriendSuggestion = () => {
                                             onClick={(e) => {
                                                 e.preventDefault(); // Prevents the default Link behavior
                                                 e.stopPropagation(); // Prevents event bubbling to the Link component
-                                                handleToggleAddFriend({ userId: id, friendId: item.id })
+                                                handleToggleAddFriend({ userId: user?.id, friendId: item.id })
                                             }}
                                             className='absolute -bottom-16 w-full max-md:w-auto btn btn-primary'
                                         >

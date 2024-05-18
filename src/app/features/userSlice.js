@@ -26,21 +26,27 @@ export const fetchNonFriends = createAsyncThunk(
     }
 );
 
+
+export const fetchFriendRequests = createAsyncThunk(
+    'user/fetchFriendRequests',
+    async (userId) => {
+        const response = await axios.get(`/users/${userId}/friend-requests`);
+        return response.data;
+    }
+);
+
 export const toggleAddFriend = createAsyncThunk(
     'user/toggleAddFriend',
     async ({ userId, friendId }, { dispatch }) => {
         try {
-            console.log(userId, friendId);
             const response = await axios.post(`/users/${userId}/friends/${friendId}`);
             console.log(response.data);
             if (response.data.EC === 0) {
-                // Dispatch fetchNonFriends and fetchFriends after adding/removing a friend
                 await dispatch(fetchNonFriends(userId));
                 await dispatch(fetchFriends(userId));
             }
             return response.data;
         } catch (error) {
-            // Handle error if the POST request fails
             console.error('Error adding/removing friend:', error);
             throw error;
         }
@@ -51,9 +57,11 @@ export const toggleAddFriend = createAsyncThunk(
 const initialState = {
     userData: {},
     friends: [],
+    friendRequests: [],
     nonFriends: [],
     loadingFriends: false,
     loadingNonFriends: false,
+    loadingFriendRequests: false
 };
 
 // Slice
@@ -73,6 +81,8 @@ const userSlice = createSlice({
             .addCase(fetchFriends.rejected, (state) => {
                 state.loadingFriends = false;
             })
+
+
             .addCase(toggleAddFriend.pending, (state) => {
                 state.loadingNonFriends = true;
             })
@@ -82,6 +92,19 @@ const userSlice = createSlice({
             .addCase(toggleAddFriend.rejected, (state) => {
                 state.loadingNonFriends = false;
             })
+
+            .addCase(fetchFriendRequests.pending, (state) => {
+                state.loadingFriendRequests = true;
+            })
+            .addCase(fetchFriendRequests.fulfilled, (state, action) => {
+                state.loadingFriendRequests = false;
+                state.friendRequests = action.payload;
+            })
+            .addCase(fetchFriendRequests.rejected, (state) => {
+                state.loadingFriendRequests = false;
+            })
+
+
             .addCase(fetchNonFriends.pending, (state) => {
                 state.loadingNonFriends = true;
             })
@@ -95,9 +118,6 @@ const userSlice = createSlice({
     },
 });
 
-
 export const selectUser = (state) => state.user;
-
 export default userSlice.reducer;
-
 export const userReducer = userSlice.reducer;

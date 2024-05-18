@@ -5,35 +5,34 @@ import CreateSection from '../components/CreateSection';
 import FriendSuggestion from '../components/FriendSuggestion';
 import PageNav from '../components/PageNav';
 import useUserData from '../hooks/useUserData'
-import { fetchUserDataById } from '../app/features/userSlice';
+import useFetchFriendsData from '../hooks/useFetchFriendsData'
+import { fetchFriendRequests, fetchFriends, fetchUserDataById } from '../app/features/userSlice';
 import { useDispatch } from 'react-redux';
 import useProfileUserData from '../hooks/useProfileUserData';
 import { useParams } from 'react-router-dom';
 
 
 const Profile = () => {
+    const dispatch = useDispatch()
     const { id } = useParams()
-    const [user] = useUserData()
-    const [isLoading, setIsLoading] = useState(true)
+    const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
     const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
-    console.log(profileData);
+    const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
+    const fetchData = async () => {
+        const resultAction = await dispatch(fetchFriends(id));
+        setTotalOfficialFriends(resultAction.payload);
+    };
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setIsLoading(false);
-        }, 300); // Simulating a 3-second loading time
-
-        return () => clearTimeout(timeout);
-    }, []);
-
-
+        fetchData()
+    }, [id])
 
 
     if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection isProfilePage data={{ name: profileData?.name, friends: profileData?.officialFriends?.length ?? 0 }} />
+                <IntroSection isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0 }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>

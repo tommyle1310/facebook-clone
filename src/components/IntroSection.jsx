@@ -3,6 +3,7 @@ import Avatar from './Avatar';
 
 const IntroSection = ({ isProfilePage, data, permissions }) => {
     const [isOpenModalEdit, setIsOpenModalEdit] = useState(false)
+    const [isOpenModalUploadImage, setIsOpenModalUploadImage] = useState(false)
     const renderActionButtons = () => {
         if (isProfilePage) {
             return (
@@ -22,7 +23,7 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
                                         <div className="divider"></div>
                                         <div className="tw-jb">
                                             <h5 className='text-lg font-bold'>Profile Picture</h5>
-                                            <p className='text-info font-semibold'>Edit</p>
+                                            <button onClick={() => setIsOpenModalUploadImage(true)} className='text-info font-semibold'>Edit</button>
                                         </div>
                                         <div className="text-center">
                                             <Avatar />
@@ -47,7 +48,19 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
                                 </div>
                             </div>
                         </div>
-
+                    }
+                    {isOpenModalUploadImage &&
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                            <div className="bg-base-100 shadow-sm rounded-md z-30  min-w-[48rem] min-h-screen modal-box">
+                                <div className=" mx-auto w-full h-full p-3">
+                                    <form method="dialog">
+                                        {/* if there is a button in form, it will close the modal */}
+                                        <button onClick={() => setIsOpenModalUploadImage(false)} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                    </form>
+                                    <div className="">hello world</div>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </div>
             );
