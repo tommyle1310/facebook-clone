@@ -40,7 +40,6 @@ export const toggleAddFriend = createAsyncThunk(
     async ({ userId, friendId }, { dispatch }) => {
         try {
             const response = await axios.post(`/users/${userId}/friends/${friendId}`);
-            console.log(response.data);
             if (response.data.EC === 0) {
                 await dispatch(fetchNonFriends(userId));
                 await dispatch(fetchFriends(userId));
@@ -52,6 +51,8 @@ export const toggleAddFriend = createAsyncThunk(
         }
     }
 );
+
+
 
 // Initial state
 const initialState = {

@@ -10,7 +10,7 @@ const CreateSection = () => {
             <div className="flex items-center gap-5 w-full ">
                 <Link to={`/profile/${user?.id}`} className="avatar">
                     <div className="w-10 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        <img src={user?.image} alt={user?.name} />
                     </div>
                 </Link>
                 <input type="text" onClick={() => document.getElementById('my_modal_5').showModal()} placeholder="Share something..." className="input input-bordered input-primary w-full" />

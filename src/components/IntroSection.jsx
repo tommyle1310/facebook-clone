@@ -1,9 +1,33 @@
 import React, { useState } from 'react';
 import Avatar from './Avatar';
+import useImageUpload from '../hooks/useImageUpload';
+import useUserData from '../hooks/useUserData';
+import { useDispatch } from 'react-redux';
+import { editUserAvatar } from '../app/features/authSlice';
 
-const IntroSection = ({ isProfilePage, data, permissions }) => {
+const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
+    const [user] = useUserData()
+    const dispatch = useDispatch()
     const [isOpenModalEdit, setIsOpenModalEdit] = useState(false)
     const [isOpenModalUploadImage, setIsOpenModalUploadImage] = useState(false)
+
+    const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload();
+
+    const saveImageToDatabase = async () => {
+        const imageDataString = getImageDataString();
+        if (imageDataString) {
+            // Now you can save `imageDataString` to your database
+            // Example: send it to an API endpoint or store it in your database directly
+            const response = await dispatch(editUserAvatar({ userId: user?.id, image: imageDataString }))
+            if (response?.EC === 0) {
+                setIsOpenModalUploadImage(false)
+            }
+        } else {
+            console.log('No image selected.');
+        }
+    };
+
+
     const renderActionButtons = () => {
         if (isProfilePage) {
             return (
@@ -26,7 +50,7 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
                                             <button onClick={() => setIsOpenModalUploadImage(true)} className='text-info font-semibold'>Edit</button>
                                         </div>
                                         <div className="text-center">
-                                            <Avatar />
+                                            <Avatar image={user.image} />
                                         </div>
                                         <div className="tw-jb">
                                             <h5 className='text-lg font-bold'>Cover Photo</h5>
@@ -35,7 +59,7 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
                                         <div className="text-center">
                                             <div className="avatar">
                                                 <div className="w-48 h-20 rounded-xl">
-                                                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                                    <img src={user?.image} />
                                                 </div>
                                             </div>
                                         </div>
@@ -51,13 +75,35 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
                     }
                     {isOpenModalUploadImage &&
                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-                            <div className="bg-base-100 shadow-sm rounded-md z-30  min-w-[48rem] min-h-screen modal-box">
+                            <div className="bg-base-100 tw-cc shadow-sm rounded-md z-30  min-w-[48rem] min-h-screen modal-box">
                                 <div className=" mx-auto w-full h-full p-3">
                                     <form method="dialog">
                                         {/* if there is a button in form, it will close the modal */}
                                         <button onClick={() => setIsOpenModalUploadImage(false)} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                     </form>
-                                    <div className="">hello world</div>
+                                    <div className=''>
+                                        {/* Input element for selecting the image */}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="file-input file-input-bordered file-input-secondary w-full "
+                                            onChange={handleFileInputChange}
+                                        />
+
+                                        {/* Display the selected image */}
+                                        <div className='max-w-md mx-auto relative my-5 rounded-btn py-10 bg-black'>
+                                            {image && (
+                                                <>
+                                                    <button onClick={resetImage} className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                                    <img className='w-1/2 aspect-square mx-auto' src={image} alt="Selected" />
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Button to save the image to the database */}
+                                        <button className='btn btn-primary w-full ' onClick={saveImageToDatabase}>Save Image</button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -78,7 +124,7 @@ const IntroSection = ({ isProfilePage, data, permissions }) => {
         <div className="h-80 max-md:h-40 w-full bg-accent rounded-b-xl relative disabled">
             {isProfilePage && (
                 <div className="absolute -bottom-20  border-base-100 left-10 size-40 max-md:size-20 max-md:-bottom-10 overflow-hidden rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="profile" />
+                    <img src={imageAvatar} alt={"profile"} />
                 </div>
             )}
 

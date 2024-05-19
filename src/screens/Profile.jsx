@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 const Profile = () => {
     const dispatch = useDispatch()
     const { id } = useParams()
+    const [user] = useUserData()
     const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
     const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
     const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
@@ -32,7 +33,7 @@ const Profile = () => {
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0 }} />
+                <IntroSection imageAvatar={user?.image} isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0 }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>
@@ -45,7 +46,7 @@ const Profile = () => {
                                 <div className="tw-ic gap-1"><i className="fa-solid fa-location-dot"></i>Live in Saigon</div>
                                 <button className='btn w-full hover:opacity-80'>Edit my posts</button>
                                 <div className="w-36 max-md:w-24 rounded-box h-56 max-md:h-36 overflow-hidden group tw-hv hover:opacity-80 cursor-pointer">
-                                    <img className='object-cover group-hover:scale-105 tw-hv w-full h-full' src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                    <img className='object-cover group-hover:scale-105 tw-hv w-full h-full' src={user?.image} />
                                 </div>
                                 <button className='btn w-full hover:opacity-80'>Edit Featured</button>
 

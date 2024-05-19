@@ -9,6 +9,7 @@ const initialState = {
     errorMessage: '',
     email: '',
     name: '',
+    image: '',
     id: ''
 };
 
@@ -21,6 +22,7 @@ const authSlice = createSlice({
             state.token = action.payload.token;
             state.email = action.payload.email;
             state.name = action.payload.name;
+            state.image = action.payload.image;
             state.id = action.payload.id;
             state.errorMessage = '';
         },
@@ -31,10 +33,15 @@ const authSlice = createSlice({
             state.id = action.payload.id;
             state.errorMessage = '';
         },
+        editImageSuccess(state, action) {
+            state.image = action.payload.image;
+            state.errorMessage = '';
+        },
         signOutSuccess(state) {
             state.token = null;
             state.email = '';
             state.name = '';
+            state.image = '';
             state.errorMessage = '';
             state.id = '';
         },
@@ -52,6 +59,7 @@ export const {
     signInSuccess,
     signUpSuccess,
     signOutSuccess,
+    editImageSuccess,
     addError,
     clearErrorMessage,
 } = authSlice.actions;
@@ -96,13 +104,14 @@ export const signin = ({ email, password }, navigate) => async (dispatch) => {
     try {
         const response = await axios.post('/signin', { email, password });
         if (response.data) {
-            const { token, email, name, id } = response.data;
+            const { token, email, name, id, image } = response.data;
             if (response.data.EC === 0) {
                 localStorage.setItem('token', token);
                 localStorage.setItem('email', email);
                 localStorage.setItem('name', name);
+                localStorage.setItem('image', image);
                 localStorage.setItem('id', id);
-                dispatch(signInSuccess({ token, email, name, id }));
+                dispatch(signInSuccess({ token, email, name, id, image }));
                 navigate('/');
             }
             else if (response.data.EC === 2) {
@@ -156,6 +165,30 @@ export const signout = (navigate) => async (dispatch) => {
         navigate('/login');
     } catch (error) {
         console.error(error);
+    }
+};
+
+export const editUserAvatar = ({ userId, image }) => async (dispatch) => {
+    try {
+        const response = await axios.post('/users/edit-avatar', { userId, image });
+        if (response.data) {
+            if (response.data.EC === 0) {
+                localStorage.setItem('image', image);
+                dispatch(editImageSuccess({ image }));
+
+            }
+            else if (response.data.EC === 2) {
+                dispatch(addError('Invalid userId or image'));
+            }
+            else {
+                dispatch(addError('Something went wrong in the server, please try again later.'));
+            }
+        }
+        return response.data
+    } catch (error) {
+        console.log(error);
+        const errorMessage = error.response ? error.response.data.error : 'Something went wrong when signing you in.';
+        dispatch(addError(errorMessage));
     }
 };
 

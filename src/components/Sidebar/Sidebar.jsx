@@ -11,7 +11,7 @@ const Sidebar = ({ typePage }) => {
     const renderHomeLinks = () => (
         <>
             <Link to={`/profile/${user?.id}`} className="p-2 flex gap-3 items-center tw-hv hover:bg-base-300 rounded-lg text-lg font-bold">
-                <Avatar size={8} />
+                <Avatar size={8} image={user?.image} />
                 {user?.name}
             </Link>
             <IntroSidebarSection

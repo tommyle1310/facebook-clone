@@ -35,7 +35,7 @@ const FriendSuggestion = () => {
                             >
                                 <Link
                                     to={`/profile/${item.id}`}
-                                    style={{ backgroundImage: `url("https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg")` }}
+                                    style={{ backgroundImage: `url("${item.profilePic}")` }}
                                     className="rounded-md w-full mx-auto bg-cover bg-no-repeat bg-center relative h-[50%]"
                                     alt="User Profile"
                                 >

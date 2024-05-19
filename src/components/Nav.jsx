@@ -1,82 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import useTheme from '../hooks/useTheme'
 import { useLocation } from 'react-router-dom'
 import IntroSidebarSection from '../components/Sidebar/IntroSidebarSection'
 import Avatar from './Avatar'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import useUserData from '../hooks/useUserData'
 import { signout } from '../app/features/authSlice'
+import useFetchNotifications from '../hooks/useFetchNotifications'
 
-
-const notifications = [
-    {
-        id: 1,
-        title: 'Friend requests',
-        items: [
-            {
-                avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                message: 'Mai Uchiha sent you a friend request.',
-                time: '4 days ago',
-                actions: ['Confirm', 'Delete']
-            }
-        ]
-    },
-    {
-        id: 2,
-        title: 'Earlier',
-        items: [
-            {
-                avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                message: 'You have a memory with Mai Uchiha and Mai Uchiha to look back today.',
-                time: '4 days ago',
-                badge: 'bell',
-                badgeColor: 'info'
-            },
-            {
-                avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                message: 'Tpp Mo Gaming was live. Check it out!',
-                time: '4 days ago',
-                badge: 'circle',
-                badgeColor: 'error'
-
-            },
-            {
-                avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                message: 'React Native Devs has 2 new posts. Check it out!',
-                time: '4 days ago',
-                badge: 'people-group',
-                badgeColor: 'success'
-
-            },
-            {
-                avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                message: 'Sa Nguyen mentioned you in a comment in MLBBVN community',
-                time: '4 days ago',
-                badge: 'tag',
-                badgeColor: 'warning'
-
-            }
-        ]
-    }
-];
 
 const Nav = () => {
-    const [user] = useUserData()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const [notificationsData, loadingNotificationsData] = useFetchNotifications();
+    const [notifications, setNotifications] = useState([]);
 
-    const { theme, toggleTheme } = useTheme()
-    const { pathname } = useLocation()
-    const handleStyleActiveTabLink = (type) => {
-        if (type === '/' && pathname === '/') {
-            return "btn bg-primary join-item hover:bg-secondary"; // Apply active style for '/'
-        } else if (type !== '/' && pathname.startsWith(type)) {
-            return "btn bg-primary join-item hover:bg-secondary"; // Apply active style for other paths starting with type
-        } else {
-            return "btn hover:bg-primary join-item"; // Apply default style
+    useEffect(() => {
+        if (!loadingNotificationsData && notificationsData) {
+            const friendRequestsData = notificationsData[0]?.friendRequests || [];
+            const transformedFriendRequests = friendRequestsData.map(item => ({
+                avatar: item.profilePic,
+                message: `${item.name} sent you a friend request`,
+                time: '4 days ago',
+                actions: ['Confirm', 'Delete'],
+                id: item?.id
+            }));
+
+            const formatNotificationsFriendRequests = {
+                id: 1,
+                title: 'Friend requests',
+                items: transformedFriendRequests
+            };
+
+            setNotifications([formatNotificationsFriendRequests, notificationsData[1]]);
         }
+    }, [notificationsData, loadingNotificationsData]);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { theme, toggleTheme } = useTheme();
+    const { pathname } = useLocation();
+
+    const handleStyleActiveTabLink = (type) => {
+        return type === '/' && pathname === '/' || type !== '/' && pathname.startsWith(type)
+            ? "btn bg-primary join-item hover:bg-secondary"
+            : "btn hover:bg-primary join-item";
     };
+
+    const [user] = useUserData()
 
     return (
         <>
@@ -169,40 +139,43 @@ const Nav = () => {
                                     <a role="tab" className="tab tab-active">Unread</a>
                                 </div>
                                 <div className="w-full tw-fc gap-3">
-                                    {notifications.map((section) => (
-                                        <div key={section.id} className="tw-fc gap-3">
+                                    {notifications?.map((section, index) => (
+                                        <div key={index} className="tw-fc gap-3">
                                             <div className="tw-jb">
-                                                <h5 className="text-lg font-bold">{section.title}</h5>
+                                                <h5 className="text-lg font-bold">{section?.title}</h5>
                                                 <h5 className="text-info">See All</h5>
                                             </div>
-                                            {section.items.map((item, index) => (
-                                                <div key={index} className="tw-ic gap-3 flex-1">
-                                                    <div className="avatar relative">
-                                                        <div className="size-16 rounded-full">
-                                                            <img src={item.avatar} alt="avatar" />
+                                            {section?.items?.map((item, index) => (
+                                                <div key={index} className="tw-fc gap-3 flex-1">
+                                                    <div className="tw-ic gap-3">
+                                                        <div className="avatar relative">
+                                                            <Link to={`/profile/${item?.id}`} className="size-16 rounded-full">
+                                                                <img src={item?.avatar} alt={item?.name} />
+                                                            </Link>
+                                                            {item?.badge && (
+                                                                <div className={`badge absolute bottom-0 -right-2 badge-${item?.badgeColor} tw-cc size-6`}>
+                                                                    <i className={`fa-solid text-white absolute inset-0 top-1 fa-${item?.badge}`}></i>
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                        {item.badge && (
-                                                            <div className={`badge absolute bottom-0 -right-2 badge-${item.badgeColor} tw-cc size-6`}>
-                                                                <i className={`fa-solid text-white absolute inset-0 top-1 fa-${item.badge}`}></i>
-                                                            </div>
-                                                        )}
+                                                        <div className="tw-fc w-full items-start">
+                                                            <p className="text-start">{item?.message}</p>
+                                                            <p className="text-info text-sm">{item?.time}</p>
+                                                        </div>
+                                                        <i className="fa-solid text-lg fa-circle text-primary"></i>
                                                     </div>
-                                                    <div className="tw-fc w-full items-start">
-                                                        <p className="text-start">{item.message}</p>
-                                                        <p className="text-info text-sm">{item.time}</p>
-                                                    </div>
-                                                    <i className="fa-solid text-lg fa-circle text-primary"></i>
+                                                    {section?.items[0]?.actions && (
+                                                        <div className="gap-3 tw-cc">
+                                                            {section?.items[0]?.actions?.map((action, index) => (
+                                                                <div key={index} onClick={() => { }} className={`btn btn-${index === 0 ? 'primary' : 'neutral'}`}>
+                                                                    {action}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
-                                            {section.items[0].actions && (
-                                                <div className="gap-3 tw-cc">
-                                                    {section.items[0].actions.map((action, index) => (
-                                                        <div key={index} onClick={() => { }} className={`btn btn-${index === 0 ? 'primary' : 'neutral'}`}>
-                                                            {action}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
+
                                         </div>
                                     ))}
                                 </div>
@@ -212,8 +185,9 @@ const Nav = () => {
 
                     {/* setting */}
                     <div className="dropdown">
-                        <div tabIndex={0} role='button' className="w-10 overflow-hidden rounded-full">
-                            <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        <div tabIndex={0} role='button' className="w-10 aspect-square overflow-hidden rounded-full">
+                            <img alt={user?.name} src={user?.image} className='w-full h-full' />
+
                         </div>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-primary shadow-sm bg-base-100 rounded-box w-52 right-0">
                             <li><a>Homepage</a></li>
