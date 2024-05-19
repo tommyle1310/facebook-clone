@@ -26,6 +26,7 @@ const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
             console.log('No image selected.');
         }
     };
+    // console.log('img:', user?.image);
 
 
     const renderActionButtons = () => {
@@ -141,10 +142,10 @@ const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
                         <p className='text-lg font-semibold'>{data.members ? `${data.members} members` : `${data.friends} friends`}</p>
                     </div>
                     <div className="avatar-group max-md:hidden -space-x-6 rtl:space-x-reverse">
-                        {[1, 2, 3, 4].map((index) => (
+                        {data?.friendImages?.slice(-5)?.map((item, index) => (
                             <div className="avatar" key={index}>
                                 <div className="w-8">
-                                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt={`avatar-${index}`} />
+                                    <img src={item} alt={`avatar-${index}`} />
                                 </div>
                             </div>
                         ))}

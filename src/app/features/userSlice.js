@@ -52,7 +52,13 @@ export const toggleAddFriend = createAsyncThunk(
     }
 );
 
-
+export const fetchAvatar = createAsyncThunk(
+    'user/fetchAvatar',
+    async (userId) => {
+        const response = await axios.get(`/users/${userId}/avatar`);
+        return response.data;
+    }
+);
 
 // Initial state
 const initialState = {

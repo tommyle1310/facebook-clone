@@ -8,42 +8,32 @@ import { useDispatch } from 'react-redux';
 import useUserData from '../hooks/useUserData'
 import { signout } from '../app/features/authSlice'
 import useFetchNotifications from '../hooks/useFetchNotifications'
+import { toggleAddFriend } from '../app/features/userSlice'
 
 
 const Nav = () => {
-    const [notificationsData, loadingNotificationsData] = useFetchNotifications();
-    const [notifications, setNotifications] = useState([]);
+    const [notifications, isLoadingNotifications, refetchNotifications] = useFetchNotifications();
+    const [notificationTab, setNotificationTab] = useState(0)
 
-    useEffect(() => {
-        if (!loadingNotificationsData && notificationsData) {
-            const friendRequestsData = notificationsData[0]?.friendRequests || [];
-            const transformedFriendRequests = friendRequestsData.map(item => ({
-                avatar: item.profilePic,
-                message: `${item.name} sent you a friend request`,
-                time: '4 days ago',
-                actions: ['Confirm', 'Delete'],
-                id: item?.id
-            }));
-
-            const formatNotificationsFriendRequests = {
-                id: 1,
-                title: 'Friend requests',
-                items: transformedFriendRequests
-            };
-
-            setNotifications([formatNotificationsFriendRequests, notificationsData[1]]);
-        }
-    }, [notificationsData, loadingNotificationsData]);
-
+    // console.log();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme, toggleTheme } = useTheme();
     const { pathname } = useLocation();
 
+
     const handleStyleActiveTabLink = (type) => {
         return type === '/' && pathname === '/' || type !== '/' && pathname.startsWith(type)
             ? "btn bg-primary join-item hover:bg-secondary"
             : "btn hover:bg-primary join-item";
+    };
+
+    const handleToggleAddFriend = async ({ userId, friendId }) => {
+
+        const response = await dispatch(toggleAddFriend({ userId, friendId }));
+        console.log(response);
+        // Refetch non-friends data after toggling friend status
+        refetchNotifications();
     };
 
     const [user] = useUserData()
@@ -135,49 +125,68 @@ const Nav = () => {
                             <div className="tw-fc gap-3 items-start p-5 overflow-y-auto bg-base-100 min-h-screen w-[30rem]">
                                 <h3 className="text-xl font-bold">Notifications</h3>
                                 <div role="tablist" className="tabs tabs-boxed bg-base-200">
-                                    <a role="tab" className="tab">All</a>
-                                    <a role="tab" className="tab tab-active">Unread</a>
+                                    <a onClick={() => { setNotificationTab(0) }} role="tab" className={`tab ${notificationTab === 0 && 'tab-active'}`}>All</a>
+                                    <a onClick={() => { setNotificationTab(1) }} role="tab" className={`tab ${notificationTab === 1 && 'tab-active'}`}>Unread</a>
                                 </div>
                                 <div className="w-full tw-fc gap-3">
-                                    {notifications?.map((section, index) => (
-                                        <div key={index} className="tw-fc gap-3">
-                                            <div className="tw-jb">
-                                                <h5 className="text-lg font-bold">{section?.title}</h5>
-                                                <h5 className="text-info">See All</h5>
-                                            </div>
-                                            {section?.items?.map((item, index) => (
-                                                <div key={index} className="tw-fc gap-3 flex-1">
-                                                    <div className="tw-ic gap-3">
-                                                        <div className="avatar relative">
-                                                            <Link to={`/profile/${item?.id}`} className="size-16 rounded-full">
-                                                                <img src={item?.avatar} alt={item?.name} />
-                                                            </Link>
-                                                            {item?.badge && (
-                                                                <div className={`badge absolute bottom-0 -right-2 badge-${item?.badgeColor} tw-cc size-6`}>
-                                                                    <i className={`fa-solid text-white absolute inset-0 top-1 fa-${item?.badge}`}></i>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="tw-fc w-full items-start">
-                                                            <p className="text-start">{item?.message}</p>
-                                                            <p className="text-info text-sm">{item?.time}</p>
-                                                        </div>
-                                                        <i className="fa-solid text-lg fa-circle text-primary"></i>
-                                                    </div>
-                                                    {section?.items[0]?.actions && (
-                                                        <div className="gap-3 tw-cc">
-                                                            {section?.items[0]?.actions?.map((action, index) => (
-                                                                <div key={index} onClick={() => { }} className={`btn btn-${index === 0 ? 'primary' : 'neutral'}`}>
-                                                                    {action}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    )}
+                                    {isLoadingNotifications ?
+                                        <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
+                                        :
+                                        <div className='w-full tw-fc'>
+                                            <div className="p-3 tw-fc gap-2">
+                                                <div className="flex tw-jb">
+                                                    <h5 className="text-lg font-semibold">Friend requests</h5>
+                                                    <Link to='/friends' className="text-info tw-hv hover:text-primary">See All</Link>
                                                 </div>
-                                            ))}
-
+                                                {
+                                                    notificationTab === 0 ?
+                                                        notifications?.map((item) => (
+                                                            <div key={item.id} className="tw-jb gap-3">
+                                                                <Avatar image={item.avatar} />
+                                                                {
+                                                                    item.type === "FRIEND_REQUEST" &&
+                                                                    <div className="flex-1 tw-fc gap-1">
+                                                                        <div className="tw-jb">
+                                                                            <h5 className="font-semibold">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
+                                                                        </div>
+                                                                        <div className="tw-jb gap-1">
+                                                                            <a onClick={() => { }} className="btn w-1/2 btn-primary">Accept</a>
+                                                                            <a className="btn w-1/2 btn-secondary">Remove</a>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                <div className="w-5 tw-cc">
+                                                                    <i className="fa-solid text-primary fa-circle"></i>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                        :
+                                                        notifications?.filter(item => item.read === false)?.map((item) => (
+                                                            <div key={item.id} className="tw-jb gap-3">
+                                                                <Avatar image={item.avatar} />
+                                                                {
+                                                                    item.type === "FRIEND_REQUEST" &&
+                                                                    <div className="flex-1 tw-fc gap-1">
+                                                                        <div className="tw-jb">
+                                                                            <h5 className="font-semibold">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
+                                                                        </div>
+                                                                        <div className="tw-jb gap-1">
+                                                                            <div onClick={() => handleToggleAddFriend({ userId: user?.id, friendId: item?.fromId })} className="btn w-1/2 btn-primary">Accept</div>
+                                                                            <div className="btn w-1/2 btn-secondary">Remove</div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                <div className="w-5 tw-cc">
+                                                                    <i className="fa-solid text-primary fa-circle"></i>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                }
+                                            </div>
                                         </div>
-                                    ))}
+                                    }
                                 </div>
                             </div>
                         </ul>

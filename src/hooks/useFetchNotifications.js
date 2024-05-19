@@ -1,71 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import useUserData from './useUserData';
-import useFetchFriendsData from './useFetchFriendsData';
-import { fetchFriendRequests } from '../app/features/userSlice';
+import useProfileUserData from './useProfileUserData';
+import { useDispatch } from 'react-redux';
+import { fetchAvatar } from '../app/features/userSlice';
 
 const useFetchNotifications = () => {
+    const dispatch = useDispatch();
     const [user] = useUserData();
-    const [friendRequests, loadingFriendRequests] = useFetchFriendsData(user?.id, fetchFriendRequests);
+    const [profileData, isLoadingProfile] = useProfileUserData({ userId: user?.id });
 
-    const [notifications, setNotifications] = useState([
-        {
-            id: 2,
-            title: 'Earlier',
-            items: [
-                {
-                    avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                    message: 'You have a memory with Mai Uchiha and Mai Uchiha to look back today.',
-                    time: '4 days ago',
-                    badge: 'bell',
-                    badgeColor: 'info'
-                },
-                {
-                    avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                    message: 'Tpp Mo Gaming was live. Check it out!',
-                    time: '4 days ago',
-                    badge: 'circle',
-                    badgeColor: 'error'
-                },
-                {
-                    avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                    message: 'React Native Devs has 2 new posts. Check it out!',
-                    time: '4 days ago',
-                    badge: 'people-group',
-                    badgeColor: 'success'
-                },
-                {
-                    avatar: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-                    message: 'Sa Nguyen mentioned you in a comment in MLBBVN community',
-                    time: '4 days ago',
-                    badge: 'tag',
-                    badgeColor: 'warning'
-                }
-            ]
+    const defaultItemNotification = {
+        id: 0,
+        fromType: '',
+        fromId: '',
+        message: '',
+        read: false,
+        timestamp: '4 days',
+        avatar: ''
+    };
+
+    const [notifications, setNotifications] = useState([defaultItemNotification]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchNotificationAvatar = async (fromId) => {
+        const response = await dispatch(fetchAvatar(fromId));
+        return response.payload;
+    };
+
+    const fetchNotifications = useCallback(async () => {
+        if (isLoadingProfile) {
+            setIsLoading(true);
+            return;
         }
-    ]);
+
+        if (profileData?.notifications?.length > 0) {
+            const notificationList = await Promise.all(profileData.notifications.map(async (item) => {
+                const avatar = await fetchNotificationAvatar(item.fromId);
+
+                return {
+                    id: item.id,
+                    fromType: item.fromType,
+                    fromId: item.fromId,
+                    type: item.type,
+                    avatar: avatar,
+                    message: item.message,
+                    read: item.read,
+                    timestamp: item.timestamp
+                };
+            }));
+
+            setNotifications(notificationList);
+        } else {
+            setNotifications([defaultItemNotification]);
+        }
+
+        setIsLoading(false);
+    }, [profileData, isLoadingProfile, dispatch]);
 
     useEffect(() => {
-        if (friendRequests.length > 0) {
-            setNotifications((prevNotifications) => {
-                // Check if friendRequests are already included in the notifications
-                const hasFriendRequests = prevNotifications.some(
-                    (notification) => notification.friendRequests
-                );
+        fetchNotifications();
+    }, [fetchNotifications]);
 
-                if (hasFriendRequests) {
-                    // Update existing friendRequests notification
-                    return prevNotifications.map((notification) =>
-                        notification.friendRequests ? { friendRequests } : notification
-                    );
-                } else {
-                    // Add new friendRequests notification
-                    return [{ friendRequests }, ...prevNotifications];
-                }
-            });
-        }
-    }, [friendRequests]);
-
-    return [notifications];
+    return [notifications, isLoading, fetchNotifications];
 };
 
 export default useFetchNotifications;

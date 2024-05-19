@@ -18,6 +18,7 @@ const Profile = () => {
     const [user] = useUserData()
     const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
     const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
+    console.log(totalOfficialFriends);
     const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
     const fetchData = async () => {
         const resultAction = await dispatch(fetchFriends(id));
@@ -33,7 +34,7 @@ const Profile = () => {
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection imageAvatar={user?.image} isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0 }} />
+                <IntroSection imageAvatar={user?.image} isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0, friendImages: totalOfficialFriends?.map(item => item.profilePic) }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>
