@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchUserDataById } from '../app/features/userSlice';
 
 const useProfileUserData = ({ userId }) => {
-    const dispatch = useDispatch()
-    const [resultProfile, setResultProfile] = useState({})
-    const [isLoadingProfile, setIsLoadingProfile] = useState(true)
+    const dispatch = useDispatch();
+    const [resultProfile, setResultProfile] = useState({});
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+
+    const fetchData = useCallback(async () => {
+        setIsLoadingProfile(true);
+        const data = await dispatch(fetchUserDataById(userId)); // Pass the userId if needed
+        if (data.type === "user/fetchUserDataById/fulfilled") {
+            setResultProfile(data.payload);
+            setIsLoadingProfile(false);
+        }
+    }, [dispatch, userId]);
 
     useEffect(() => {
-        setIsLoadingProfile(true)
-        const fetchData = async () => {
+        if (userId) {
+            fetchData();
+        }
+    }, [fetchData, userId]);
 
-            // Simulate a 3-second delay
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            const data = await dispatch(fetchUserDataById(userId)); // Pass the userId if needed
-            if (data.type === "user/fetchUserDataById/fulfilled") {
-                setResultProfile(data.payload);
-                setIsLoadingProfile(false)
-            }
-        };
+    return [resultProfile, isLoadingProfile, fetchData];
+};
 
-        fetchData();
-    }, [dispatch, userId]);
-    return [resultProfile, isLoadingProfile]
-}
-
-export default useProfileUserData
+export default useProfileUserData;

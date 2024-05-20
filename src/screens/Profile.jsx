@@ -18,7 +18,6 @@ const Profile = () => {
     const [user] = useUserData()
     const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
     const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
-    console.log(totalOfficialFriends);
     const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
     const fetchData = async () => {
         const resultAction = await dispatch(fetchFriends(id));

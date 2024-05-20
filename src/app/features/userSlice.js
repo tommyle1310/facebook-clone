@@ -60,6 +60,15 @@ export const fetchAvatar = createAsyncThunk(
     }
 );
 
+export const accpetFriendRequest = createAsyncThunk(
+    'user/acceptFriendRequest',
+    async ({ userId, friendId }) => {
+        console.log('frind:', friendId);
+        const response = await axios.post(`/users/accept-friend-request`, { userId, friendId });
+        return response.data;
+    }
+);
+
 // Initial state
 const initialState = {
     userData: {},

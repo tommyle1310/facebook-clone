@@ -1,10 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
 import useUserData from '../hooks/useUserData'
+import { PublicStatus } from '../helpers/constant'
+import useImageUpload from '../hooks/useImageUpload'
+import { useDispatch } from 'react-redux'
+import { createPost } from '../app/features/postSlice'
 
 const CreateSection = () => {
     const [user] = useUserData()
+    const dispatch = useDispatch()
+
+    const defaultPostData = {
+        content: '',
+        imageUrl: '',
+        videoUrl: '',
+        groupId: null,
+        publicStatus: 'PUBLIC'
+    }
+    const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload()
+
+    const [selectedPublicStatus, setSelectedPublicStatus] = useState(0)
+
+    const [postData, setPostData] = useState(defaultPostData)
+
+    const handleSubmitPost = async () => {
+        switch (selectedPublicStatus) {
+            case 0:
+                postData.publicStatus = PublicStatus.PUBLIC;
+                break;
+            case 1:
+                postData.publicStatus = PublicStatus.FRIENDS;
+                break;
+            case 2:
+                postData.publicStatus = PublicStatus.PRIVATE;
+                break;
+            default:
+                postData.publicStatus = PublicStatus.PUBLIC;
+                break;
+        }
+        postData.imageUrl = getImageDataString()
+        // Assuming there's more code to handle the actual submission of the post
+        try {
+            const response = await dispatch(createPost({ userId: user?.id, postData }));
+        } catch (error) {
+            console.error('Error creating post:', error);
+        }
+    };
+
+    const handleOnChangeInputPostData = (type, value) => {
+        setPostData((prevData) => ({
+            ...prevData,
+            [type]: value,
+        }));
+    };
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box">
             <div className="flex items-center gap-5 w-full ">
@@ -30,25 +79,31 @@ const CreateSection = () => {
                                     <h5 className='font-semibold'>{user?.name}</h5>
                                     <div tabIndex={0} className='font-semibold dropdown  gap-1 text-xs bg-neutral px-2 py-1 cursor-pointer rounded-md tw-jb'>
                                         <i className="fa-solid fa-user-group"></i>
-                                        <span>Friends</span>
+                                        <span>{selectedPublicStatus === 0 ? 'Public' : (selectedPublicStatus === 1 ? 'Friends' : 'Private')}</span>
                                         <i className="fa-solid fa-caret-down"></i>
 
                                         {/* dropdown  */}
                                         <ul tabIndex={0} className="dropdown-content z-[1] -right-[13rem] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li><a>Public</a></li>
-                                            <li><a>Friends</a></li>
-                                            <li><a>Private</a></li>
+                                            <li><a onClick={() => setSelectedPublicStatus(0)}>Public</a></li>
+                                            <li><a onClick={() => setSelectedPublicStatus(1)}>Friends</a></li>
+                                            <li><a onClick={() => setSelectedPublicStatus(2)}>Private</a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <textarea className="textarea textarea-primary w-full" placeholder="What's on your mind dog?"></textarea>
+                            <textarea value={postData.content} onChange={(e) => handleOnChangeInputPostData('content', e.target.value)} className="textarea textarea-primary w-full" placeholder="What's on your mind dog?"></textarea>
+                            {image &&
+                                <div className="w-[60%] mx-auto aspect-square bg-base-200 tw-cc">
+                                    <img src={image} className='mx-auto w-[80%] aspect-square' alt={'Your Image'} />
+                                </div>
+                            }
                             <div className="px-3 py-2 rounded-md border-secondary tw-r-fc gap-2  border max-md:text-xs tw-jb">
                                 <p className='font-semibold'>Add to your post</p>
                                 <div className="tw-ic gap-1">
-                                    <button className="btn btn-circle text-xs">
+                                    <label className="btn btn-circle text-xs">
+                                        <input type="file" accept="image/*" onChange={handleFileInputChange} style={{ display: 'none' }} />
                                         <i className="fa-solid text-success fa-image"></i>
-                                    </button>
+                                    </label>
                                     <button className="btn btn-circle text-xs">
                                         <i className="fa-solid text-info fa-user-tag"></i>
                                     </button>
@@ -60,7 +115,7 @@ const CreateSection = () => {
                                     </button>
                                 </div>
                             </div>
-                            <button className="w-full btn btn-neutral">Post</button>
+                            <button onClick={handleSubmitPost} className="w-full btn btn-neutral">Post</button>
                         </div>
                     </div>
                 </dialog>

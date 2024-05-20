@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom'
 import Post from '../components/Post'
 import FriendSuggestion from '../components/FriendSuggestion'
 import CreateSection from '../components/CreateSection'
+import useFetchAllPost from '../hooks/useFetchPosts'
 
 const Home = () => {
+
+    const [posts] = useFetchAllPost()
+    console.log(posts);
+
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
             <div className="carousel join carousel-center w-full gap-3 bg-base-300 rounded-box">
@@ -18,7 +23,13 @@ const Home = () => {
 
             <CreateSection />
 
-            <Post />
+            {posts?.length > 0 &&
+                posts?.map((item) => (
+                    <Post key={item?.id} authorName={item?.author?.name} avatarAuthor={item?.author?.profilePic} content={item?.content} imagePost={item?.imageUrl} publicStatus={item?.publicStatus} timestamp='2 days' />
+                ))
+            }
+
+
             <FriendSuggestion />
         </div>
     )

@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import useUserData from '../hooks/useUserData'
 import { signout } from '../app/features/authSlice'
 import useFetchNotifications from '../hooks/useFetchNotifications'
-import { toggleAddFriend } from '../app/features/userSlice'
+import { accpetFriendRequest, toggleAddFriend } from '../app/features/userSlice'
 
 
 const Nav = () => {
@@ -28,10 +28,11 @@ const Nav = () => {
             : "btn hover:bg-primary join-item";
     };
 
-    const handleToggleAddFriend = async ({ userId, friendId }) => {
+    // console.log(notifications);
 
-        const response = await dispatch(toggleAddFriend({ userId, friendId }));
-        console.log(response);
+    const handleToggleAddFriend = async ({ userId, friendId }) => {
+        const response = await dispatch(accpetFriendRequest({ userId, friendId }))
+        console.log(response.data);
         // Refetch non-friends data after toggling friend status
         refetchNotifications();
     };
@@ -145,14 +146,23 @@ const Nav = () => {
                                                                 <Avatar image={item.avatar} />
                                                                 {
                                                                     item.type === "FRIEND_REQUEST" &&
-                                                                    <div className="flex-1 tw-fc gap-1">
-                                                                        <div className="tw-jb">
-                                                                            <h5 className="font-semibold">{item.message}</h5>
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="tw-jb ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
                                                                             <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>
                                                                         <div className="tw-jb gap-1">
-                                                                            <a onClick={() => { }} className="btn w-1/2 btn-primary">Accept</a>
+                                                                            <a onClick={() => handleToggleAddFriend({ userId: user?.id, friendId: item?.fromId })} className="btn w-1/2 btn-primary">Accept</a>
                                                                             <a className="btn w-1/2 btn-secondary">Remove</a>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                {
+                                                                    item.type === "FRIEND_ACCEPT" &&
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="tw-jb ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>
                                                                     </div>
                                                                 }
@@ -175,6 +185,15 @@ const Nav = () => {
                                                                         <div className="tw-jb gap-1">
                                                                             <div onClick={() => handleToggleAddFriend({ userId: user?.id, friendId: item?.fromId })} className="btn w-1/2 btn-primary">Accept</div>
                                                                             <div className="btn w-1/2 btn-secondary">Remove</div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                {
+                                                                    item.type === "FRIEND_ACCEPT" &&
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="tw-jb ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>
                                                                     </div>
                                                                 }

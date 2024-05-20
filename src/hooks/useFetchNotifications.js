@@ -7,7 +7,7 @@ import { fetchAvatar } from '../app/features/userSlice';
 const useFetchNotifications = () => {
     const dispatch = useDispatch();
     const [user] = useUserData();
-    const [profileData, isLoadingProfile] = useProfileUserData({ userId: user?.id });
+    const [profileData, isLoadingProfile, refetchProfile] = useProfileUserData({ userId: user?.id });
 
     const defaultItemNotification = {
         id: 0,
@@ -27,14 +27,38 @@ const useFetchNotifications = () => {
         return response.payload;
     };
 
-    const fetchNotifications = useCallback(async () => {
+    const filterAndSetNotifications = useCallback(async () => {
         if (isLoadingProfile) {
             setIsLoading(true);
             return;
         }
 
         if (profileData?.notifications?.length > 0) {
-            const notificationList = await Promise.all(profileData.notifications.map(async (item) => {
+            // Filter notifications for FRIEND_REQUEST and FRIEND_ACCEPT
+            const filteredNotifications = profileData.notifications.filter(item => item.type === "FRIEND_REQUEST" || item.type === "FRIEND_ACCEPT");
+
+            // Map to store the final notifications to be displayed
+            const finalNotificationsMap = new Map();
+
+            // Iterate over filtered notifications
+            filteredNotifications.forEach(item => {
+                if (item.fromType === 'USER') {
+                    if (finalNotificationsMap.has(item.fromId)) {
+                        // If a notification from the same user exists, replace it with FRIEND_ACCEPT if it is FRIEND_REQUEST
+                        if (item.type === "FRIEND_ACCEPT") {
+                            finalNotificationsMap.set(item.fromId, item);
+                        }
+                    } else {
+                        // Otherwise, add the notification to the map
+                        finalNotificationsMap.set(item.fromId, item);
+                    }
+                }
+            });
+
+            const finalNotifications = Array.from(finalNotificationsMap.values());
+
+            // Fetch avatars and set notifications
+            const notificationList = await Promise.all(finalNotifications.map(async (item) => {
                 const avatar = await fetchNotificationAvatar(item.fromId);
 
                 return {
@@ -51,17 +75,17 @@ const useFetchNotifications = () => {
 
             setNotifications(notificationList);
         } else {
-            setNotifications([defaultItemNotification]);
+            setNotifications([]);
         }
 
         setIsLoading(false);
     }, [profileData, isLoadingProfile, dispatch]);
 
     useEffect(() => {
-        fetchNotifications();
-    }, [fetchNotifications]);
+        filterAndSetNotifications();
+    }, [filterAndSetNotifications]);
 
-    return [notifications, isLoading, fetchNotifications];
+    return [notifications, isLoading, refetchProfile];
 };
 
 export default useFetchNotifications;
