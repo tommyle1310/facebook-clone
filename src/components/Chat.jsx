@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import hoangAvt from '../../public/images/hoang_avt.jpg'
+import my_avt from '../../public/images/my_avt.jpg'
 
 
 const dataChat = [
     {
         id: 1,
         username: 'SaNguyen',
-        image: 'https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/438913576_1449811809295341_6176414371674058703_n.jpg?stp=dst-jpg_p100x100&_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeG2rkMPaYLzwdR6ccPRFPVc-BQuDlrRMMv4FC4OWtEwy5tOOn3YnNVnaswYFYO2D8IXUHRVwZUuM5QPDSIIImzJ&_nc_ohc=3fhYYZ7BRQQQ7kNvgHYAuk_&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYB5HMwYgH8Ae-3kkdcR4M1FDYqT-YdLGGBoUbMoia2L0g&oe=66461A71',
+        image: my_avt,
         link: '/profile/asodusao',
         chatContent: [
             { id: 1, sender: false, content: 'You were the Chosen One!', status: 'Delivered', sentAt: '12:45', image: null, video: null },
@@ -18,7 +19,7 @@ const dataChat = [
     {
         id: 2,
         username: 'trat khop vai',
-        image: 'https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/368246985_1342424086377299_350354740546039831_n.jpg?stp=dst-jpg_p100x100&_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGVt-Qb44sE4TUMOKMTqbWCijdNy82XeXyKN03LzZd5fOQ-PD3OnDj_gBRgw0GaCeosNG_1zC-du0zREKO6Ej0E&_nc_ohc=WIb7TzMrwzsQ7kNvgEmTMEr&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYCsz1vucbQkFV2wVshzRqdQYhmZe_fHxywlWRvBVkpKJQ&oe=6645F57F',
+        image: hoangAvt,
         link: '/profile/asodusao',
         chatContent: [],
         isOnline: false

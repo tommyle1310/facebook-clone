@@ -8,7 +8,6 @@ import useFetchAllPost from '../hooks/useFetchPosts'
 const Home = () => {
 
     const [posts] = useFetchAllPost()
-    console.log(posts);
 
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
@@ -25,7 +24,7 @@ const Home = () => {
 
             {posts?.length > 0 &&
                 posts?.map((item) => (
-                    <Post key={item?.id} authorName={item?.author?.name} avatarAuthor={item?.author?.profilePic} content={item?.content} imagePost={item?.imageUrl} publicStatus={item?.publicStatus} timestamp='2 days' />
+                    <Post key={item?.id} authorId={item?.author?.id} authorName={item?.author?.name} avatarAuthor={item?.author?.profilePic} content={item?.content} imagePost={item?.imageUrl} publicStatus={item?.publicStatus} timestamp='2 days' />
                 ))
             }
 

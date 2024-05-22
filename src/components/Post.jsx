@@ -5,6 +5,7 @@ import useUserData from '../hooks/useUserData'
 import { getAllPosts } from '../app/features/postSlice'
 import useFetchAllPost from '../hooks/useFetchPosts'
 import { PublicStatus } from '../helpers/constant'
+import videoSample from '../../public/videos/fast_motion_city.mp4'
 
 const Post = ({
     publicStatus = PublicStatus.PUBLIC,
@@ -12,7 +13,10 @@ const Post = ({
     avatarAuthor = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
     timestamp = '3 days',
     content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat necessitatibus impedit ullam illum fugiat, maxime dicta esse debitis culpa reprehenderit. Aliquam mollitia maxime tenetur repudiandae, magnam modi ullam? Laudantium, nostrum!',
-    imagePost = "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440856955_484012010859491_7428709411396250070_n.jpg?stp=cp6_dst-jpg&_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE44JkseRdBcFsjb-OWtD21EBr5UTJzYkMQGvlRMnNiQ-1DXMu7RT7C545YU9pTEb01KRMRMRL_LD689Ngr9WIK&_nc_ohc=q4fJ8HimLQcQ7kNvgH5nfkH&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYAssxsQkUIHXthpRLccgFlXa5I0QQgU74R1IZ55mH9BYQ&oe=664551F1"
+    imagePost = "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440856955_484012010859491_7428709411396250070_n.jpg?stp=cp6_dst-jpg&_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE44JkseRdBcFsjb-OWtD21EBr5UTJzYkMQGvlRMnNiQ-1DXMu7RT7C545YU9pTEb01KRMRMRL_LD689Ngr9WIK&_nc_ohc=q4fJ8HimLQcQ7kNvgH5nfkH&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYAssxsQkUIHXthpRLccgFlXa5I0QQgU74R1IZ55mH9BYQ&oe=664551F1",
+    videoPost = '',
+    authorId
+
 }) => {
 
 
@@ -21,7 +25,7 @@ const Post = ({
         <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
             <div className="flex items-center justify-between gap-5 w-full max-md:text-xs">
                 <div className="flex gap-5">
-                    <Link to='/profile/asodu' data-tip={'helo world'} className="avatar tooltip">
+                    <Link to={`/profile/${authorId}`} data-tip={authorName} className="avatar tooltip">
                         <div className="w-8 rounded-full">
                             <img src={avatarAuthor} />
                         </div>
@@ -56,6 +60,13 @@ const Post = ({
             <div className="max-md:text-xs">{content}</div>
             <div className='aspect-auto'>
                 <img className='w-full h-full object-contain' src={imagePost} alt="" />
+                {videoPost &&
+                    <div className="w-full h-full object-contain">
+                        <video src={videoPost} className="mx-auto  aspect-square" controls>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                }
             </div>
             <div className="flex justify-between items-center ">
                 <div className="join gap-1">

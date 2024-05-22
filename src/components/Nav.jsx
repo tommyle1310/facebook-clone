@@ -15,7 +15,7 @@ const Nav = () => {
     const [notifications, isLoadingNotifications, refetchNotifications] = useFetchNotifications();
     const [notificationTab, setNotificationTab] = useState(0)
 
-    // console.log();
+    console.log(notifications);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme, toggleTheme } = useTheme();
@@ -166,6 +166,15 @@ const Nav = () => {
                                                                         </div>
                                                                     </div>
                                                                 }
+                                                                {
+                                                                    item.type === "POST_LIKE" &&
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="tw-jb ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                }
                                                                 <div className="w-5 tw-cc">
                                                                     <i className="fa-solid text-primary fa-circle"></i>
                                                                 </div>
@@ -190,6 +199,15 @@ const Nav = () => {
                                                                 }
                                                                 {
                                                                     item.type === "FRIEND_ACCEPT" &&
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="tw-jb ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                {
+                                                                    item.type === "POST_LIKE" &&
                                                                     <div className="flex-1 tw-fc gap-1 ">
                                                                         <div className="tw-jb ">
                                                                             <h5 className="font-semibold ">{item.message}</h5>

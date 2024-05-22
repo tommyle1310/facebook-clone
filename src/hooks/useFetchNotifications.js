@@ -34,31 +34,15 @@ const useFetchNotifications = () => {
         }
 
         if (profileData?.notifications?.length > 0) {
-            // Filter notifications for FRIEND_REQUEST and FRIEND_ACCEPT
-            const filteredNotifications = profileData.notifications.filter(item => item.type === "FRIEND_REQUEST" || item.type === "FRIEND_ACCEPT");
-
-            // Map to store the final notifications to be displayed
-            const finalNotificationsMap = new Map();
-
-            // Iterate over filtered notifications
-            filteredNotifications.forEach(item => {
-                if (item.fromType === 'USER') {
-                    if (finalNotificationsMap.has(item.fromId)) {
-                        // If a notification from the same user exists, replace it with FRIEND_ACCEPT if it is FRIEND_REQUEST
-                        if (item.type === "FRIEND_ACCEPT") {
-                            finalNotificationsMap.set(item.fromId, item);
-                        }
-                    } else {
-                        // Otherwise, add the notification to the map
-                        finalNotificationsMap.set(item.fromId, item);
-                    }
-                }
-            });
-
-            const finalNotifications = Array.from(finalNotificationsMap.values());
+            // Filter notifications for FRIEND_REQUEST, FRIEND_ACCEPT, and POST_LIKE
+            const filteredNotifications = profileData.notifications.filter(item =>
+                item.type === "FRIEND_REQUEST" ||
+                item.type === "FRIEND_ACCEPT" ||
+                item.type === "POST_LIKE"
+            );
 
             // Fetch avatars and set notifications
-            const notificationList = await Promise.all(finalNotifications.map(async (item) => {
+            const notificationList = await Promise.all(filteredNotifications.map(async (item) => {
                 const avatar = await fetchNotificationAvatar(item.fromId);
 
                 return {

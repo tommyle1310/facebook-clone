@@ -4,6 +4,7 @@ import IntroSidebarSection from './IntroSidebarSection';
 import SidebarItemsWithAvatar from './SidebarItemsWithAvatar';
 import Avatar from '../Avatar';
 import useUserData from '../../hooks/useUserData';
+import hoangAvt from '../../../public/images/hoang_avt.jpg'
 
 const Sidebar = ({ typePage }) => {
 
@@ -41,9 +42,9 @@ const Sidebar = ({ typePage }) => {
             <div className="divider"></div>
             <h3 className="text-lg">My shortcut</h3>
             <SidebarItemsWithAvatar items={[
-                { url: "/groups/MLBBVN", title: 'Mobile Legends: Bang Bang Vietnam', image: 'https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/280392765_1399046063916323_6721271066693186838_n.jpg?stp=cp0_dst-jpg_p50x50&_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHYxms486HmlveS3ZLDU48FzacYdGZuXunNpxh0Zm5e6XDPGQgb2_dYniXA84-hu9yp0lknrQQ58SY0NyCvRmpT&_nc_ohc=u-oQAlPBSK8Q7kNvgHkXs3T&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYC_5hAtf9X7ixMobxObmthCG83eGjMgFb68_ZBsIiVRVA&oe=6644A8D0' },
-                { url: "/groups/wildrift", title: 'Wild Rift', image: 'https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/280392765_1399046063916323_6721271066693186838_n.jpg?stp=cp0_dst-jpg_p50x50&_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHYxms486HmlveS3ZLDU48FzacYdGZuXunNpxh0Zm5e6XDPGQgb2_dYniXA84-hu9yp0lknrQQ58SY0NyCvRmpT&_nc_ohc=u-oQAlPBSK8Q7kNvgHkXs3T&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYC_5hAtf9X7ixMobxObmthCG83eGjMgFb68_ZBsIiVRVA&oe=6644A8D0' },
-                { url: "/profile/:id", title: 'Tommy Le', image: 'https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/280392765_1399046063916323_6721271066693186838_n.jpg?stp=cp0_dst-jpg_p50x50&_nc_cat=103&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHYxms486HmlveS3ZLDU48FzacYdGZuXunNpxh0Zm5e6XDPGQgb2_dYniXA84-hu9yp0lknrQQ58SY0NyCvRmpT&_nc_ohc=u-oQAlPBSK8Q7kNvgHkXs3T&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYC_5hAtf9X7ixMobxObmthCG83eGjMgFb68_ZBsIiVRVA&oe=6644A8D0' }
+                { url: "/groups/MLBBVN", title: 'Mobile Legends: Bang Bang Vietnam', image: hoangAvt },
+                { url: "/groups/wildrift", title: 'Wild Rift', image: hoangAvt },
+                { url: `/profile/${user?.id}`, title: 'Tommy Le', image: hoangAvt }
             ]} />
         </>
     );

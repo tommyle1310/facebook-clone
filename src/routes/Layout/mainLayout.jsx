@@ -67,13 +67,13 @@ export default function MainLayout() {
                     <Chat />
                     <div className="p-5  w-full min-h-screen flex-1 flex">
                         {/* main content */}
-                        <div className={`w-full   ${isShowSidebarRight ? 'md:max-w-2xl ' : 'mx-auto'}`}>
+                        <div className={`w-full   ${isShowSidebarRight ? 'md:max-w-2xl' : 'mx-auto'}`}>
                             <Outlet />
                         </div>
 
                         {/* subsidebarRight */}
                         {isShowSidebarRight &&
-                            <div className="max-lg:hidden">
+                            <div className="max-xl:hidden">
                                 <SubbarRight />
                             </div>
                         }

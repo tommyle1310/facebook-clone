@@ -57,6 +57,7 @@ export const createPost = ({ userId, postData }) => async (dispatch) => {
         if (!userId || !postData) {
             return dispatch(addError('Invalid input data'));
         }
+        console.log(postData);
         const response = await axios.post('/posts/create', { userId, postData });
         if (response.data) {
             if (response.data.EC === 0) {
