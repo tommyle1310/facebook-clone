@@ -14,8 +14,6 @@ import { accpetFriendRequest, toggleAddFriend } from '../app/features/userSlice'
 const Nav = () => {
     const [notifications, isLoadingNotifications, refetchNotifications] = useFetchNotifications();
     const [notificationTab, setNotificationTab] = useState(0)
-
-    console.log(notifications);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme, toggleTheme } = useTheme();

@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Post from '../components/Post'
 import FriendSuggestion from '../components/FriendSuggestion'
 import CreateSection from '../components/CreateSection'
 import useFetchAllPost from '../hooks/useFetchPosts'
+import { useDispatch, useSelector } from 'react-redux'
+import { getLikedPosts } from '../app/features/postSlice'
+import useUserData from '../hooks/useUserData'
+import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
 
 const Home = () => {
-
     const [posts] = useFetchAllPost()
-
+    const { likedPosts, loading, refetch } = useFetchLikedPosts()
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
             <div className="carousel join carousel-center w-full gap-3 bg-base-300 rounded-box">
@@ -24,7 +27,17 @@ const Home = () => {
 
             {posts?.length > 0 &&
                 posts?.map((item) => (
-                    <Post key={item?.id} authorId={item?.author?.id} authorName={item?.author?.name} avatarAuthor={item?.author?.profilePic} content={item?.content} imagePost={item?.imageUrl} publicStatus={item?.publicStatus} timestamp='2 days' />
+                    <Post
+                        statsData={{ likes: item?.likes }}
+                        isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id)}
+                        key={item?.id} postId={item?.id}
+                        authorId={item?.author?.id}
+                        authorName={item?.author?.name}
+                        avatarAuthor={item?.author?.profilePic}
+                        content={item?.content}
+                        imagePost={item?.imageUrl}
+                        publicStatus={item?.publicStatus}
+                        timestamp='2 days' />
                 ))
             }
 

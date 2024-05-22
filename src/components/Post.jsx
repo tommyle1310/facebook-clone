@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import useUserData from '../hooks/useUserData'
-import { getAllPosts } from '../app/features/postSlice'
+import { getAllPosts, toggleLikePost } from '../app/features/postSlice'
 import useFetchAllPost from '../hooks/useFetchPosts'
 import { PublicStatus } from '../helpers/constant'
 import videoSample from '../../public/videos/fast_motion_city.mp4'
@@ -15,11 +15,23 @@ const Post = ({
     content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat necessitatibus impedit ullam illum fugiat, maxime dicta esse debitis culpa reprehenderit. Aliquam mollitia maxime tenetur repudiandae, magnam modi ullam? Laudantium, nostrum!',
     imagePost = "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440856955_484012010859491_7428709411396250070_n.jpg?stp=cp6_dst-jpg&_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE44JkseRdBcFsjb-OWtD21EBr5UTJzYkMQGvlRMnNiQ-1DXMu7RT7C545YU9pTEb01KRMRMRL_LD689Ngr9WIK&_nc_ohc=q4fJ8HimLQcQ7kNvgH5nfkH&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYAssxsQkUIHXthpRLccgFlXa5I0QQgU74R1IZ55mH9BYQ&oe=664551F1",
     videoPost = '',
-    authorId
+    authorId,
+    postId,
+    isLiked = false,
+    statsData = { likes: [], comments: 0, share: 0 }
 
 }) => {
-
-
+    const dispatch = useDispatch()
+    const [user] = useUserData()
+    const handleClickLike = async () => {
+        dispatch(toggleLikePost({ userId: user?.id, postId }))
+    }
+    const handleClickComment = async () => {
+        // console.log('check userID:', user?.id, 'postID:', postId);
+    }
+    const handleClickShare = async () => {
+        // console.log('check userID:', user?.id, 'postID:', postId);
+    }
 
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
@@ -70,9 +82,14 @@ const Post = ({
             </div>
             <div className="flex justify-between items-center ">
                 <div className="join gap-1">
-                    <i className="text-warning max-md:text-xs fa-solid fa-face-laugh-squint"></i>
-                    <i className="text-primary max-md:text-xs fa-solid fa-thumbs-up"></i>
-                    <i className="text-warning max-md:text-xs fa-solid fa-face-sad-tear"></i>
+                    <div className="tw-ic gap-1">
+
+                        <i className="text-warning max-md:text-xs fa-solid fa-face-laugh-squint"></i>
+                        <i className="text-primary max-md:text-xs fa-solid fa-thumbs-up"></i>
+                        <i className="text-warning max-md:text-xs fa-solid fa-face-sad-tear"></i>
+                        {statsData && statsData?.likes?.length}
+                    </div>
+
                 </div>
                 <div className="flex items-center gap-5">
                     <p className='max-md:text-xs'>238 comments</p>
@@ -81,9 +98,9 @@ const Post = ({
             </div>
             <div className="divider -mb-1"></div>
             <div className="join ">
-                <button className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-thumbs-up"></i><span className='max-md:hidden'>like</span></button>
-                <button className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-comment"></i><span className='max-md:hidden'>comment</span></button>
-                <button className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-share-from-square"></i><span className='max-md:hidden'>share</span></button>
+                <button onClick={handleClickLike} className={`w-1/3 btn  ${isLiked ? 'btn-info' : 'btn-ghost'} flex items-center max-md:text-xs btn-info`}><i className="fa-regular fa-thumbs-up"></i><span className='max-md:hidden'>{isLiked ? 'Liked' : 'Like'}</span></button>
+                <button onClick={handleClickComment} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-comment"></i><span className='max-md:hidden'>comment</span></button>
+                <button onClick={handleClickShare} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-share-from-square"></i><span className='max-md:hidden'>share</span></button>
             </div>
         </div>
     )

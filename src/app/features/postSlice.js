@@ -5,6 +5,7 @@ import axios from '../../api/axios';
 // Initial state definition
 const initialState = {
     posts: [],
+    likedPosts: [],
     errorMessage: '',
     loading: false,
 };
@@ -20,6 +21,11 @@ const postSlice = createSlice({
         },
         getAllPostsRequest(state) {
             state.loading = true;
+            state.errorMessage = '';
+        },
+        toggleLikePostSuccess(state, action) {
+            state.loading = false;
+            state.likedPosts = action.payload;
             state.errorMessage = '';
         },
         getAllPostsSuccess(state, action) {
@@ -46,6 +52,7 @@ export const {
     getAllPostsRequest,
     getAllPostsSuccess,
     getAllPostsFailure,
+    toggleLikePostSuccess,
     addError,
     clearErrorMessage,
 } = postSlice.actions;
@@ -57,7 +64,6 @@ export const createPost = ({ userId, postData }) => async (dispatch) => {
         if (!userId || !postData) {
             return dispatch(addError('Invalid input data'));
         }
-        console.log(postData);
         const response = await axios.post('/posts/create', { userId, postData });
         if (response.data) {
             if (response.data.EC === 0) {
@@ -67,11 +73,35 @@ export const createPost = ({ userId, postData }) => async (dispatch) => {
             } else {
                 dispatch(addError(response.data.EM || 'Something went wrong on the server, please try again later.'));
             }
+            return response.data
         }
-        return response.data
     } catch (error) {
         console.error(error);
         const errorMessage = error.response ? error.response.data.error : 'Something went wrong when creating the post.';
+        dispatch(addError(errorMessage));
+    }
+};
+
+export const toggleLikePost = ({ userId, postId }) => async (dispatch) => {
+    try {
+        // Validate the input
+        if (!userId || !postId) {
+            return dispatch(addError('Invalid input data'));
+        }
+        const response = await axios.post('/posts/like-post', { userId, postId });
+        if (response.data) {
+            if (response.data.EC === 0) {
+                const likedPostsResponse = await axios.get(`/posts/${userId}/liked-posts`);
+                dispatch(toggleLikePostSuccess(likedPostsResponse.data.data));
+            } else if (response.data.EC === -3) {
+                dispatch(addError('User not found'));
+            } else {
+                dispatch(addError(response.data.EM || 'Something went wrong on the server, please try again later.'));
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error.response ? error.response.data.error : 'Something went wrong when toggling the like.';
         dispatch(addError(errorMessage));
     }
 };
@@ -80,7 +110,21 @@ export const getAllPosts = (userId) => async (dispatch) => {
     dispatch(getAllPostsRequest());
     try {
         const response = await axios.get(`/posts/${userId}`);
-        dispatch(getAllPostsSuccess(response.data));
+        if (response.data.EC === 0) {
+
+            dispatch(getAllPostsSuccess(response.data.data));
+        }
+    } catch (error) {
+        console.error(error);
+        dispatch(getAllPostsFailure('Failed to fetch posts.'));
+    }
+};
+
+export const getLikedPosts = (userId) => async (dispatch) => {
+    dispatch(getAllPostsRequest());
+    try {
+        const response = await axios.get(`/posts/${userId}/liked-posts`);
+        dispatch(toggleLikePostSuccess(response.data.data));
     } catch (error) {
         console.error(error);
         dispatch(getAllPostsFailure('Failed to fetch posts.'));

@@ -43,6 +43,7 @@ const CreateSection = () => {
         // Assuming there's more code to handle the actual submission of the post
         try {
             const response = await dispatch(createPost({ userId: user?.id, postData }));
+            console.log(response);
             if (response.EC === 0) {
                 document.getElementById('upload_modal').close();
                 resetImage()
