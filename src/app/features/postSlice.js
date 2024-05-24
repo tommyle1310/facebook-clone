@@ -6,6 +6,7 @@ import axios from '../../api/axios';
 const initialState = {
     posts: [],
     likedPosts: [],
+    userPosts: [],
     errorMessage: '',
     loading: false,
 };
@@ -23,6 +24,10 @@ const postSlice = createSlice({
             state.loading = true;
             state.errorMessage = '';
         },
+        getUserPostsRequest(state) {
+            state.loading = true;
+            state.errorMessage = '';
+        },
         toggleLikePostSuccess(state, action) {
             state.loading = false;
             state.likedPosts = action.payload;
@@ -34,6 +39,15 @@ const postSlice = createSlice({
             state.errorMessage = '';
         },
         getAllPostsFailure(state, action) {
+            state.loading = false;
+            state.errorMessage = action.payload;
+        },
+        getUserPostsSuccess(state, action) {
+            state.loading = false;
+            state.userPosts = action.payload;
+            state.errorMessage = '';
+        },
+        getUserPostsFailure(state, action) {
             state.loading = false;
             state.errorMessage = action.payload;
         },
@@ -64,6 +78,9 @@ export const {
     getAllPostsRequest,
     getAllPostsSuccess,
     getAllPostsFailure,
+    getUserPostsRequest,
+    getUserPostsSuccess,
+    getUserPostsFailure,
     toggleLikePostSuccess,
     addCommentSuccess,
     addError,
@@ -129,6 +146,19 @@ export const getAllPosts = (userId) => async (dispatch) => {
     } catch (error) {
         console.error(error);
         dispatch(getAllPostsFailure('Failed to fetch posts.'));
+    }
+};
+
+export const getUserPosts = (userId, viewerId) => async (dispatch) => {
+    dispatch(getUserPostsRequest());
+    try {
+        const response = await axios.get(`/posts/from/${userId}/${viewerId}`);
+        if (response.data.EC === 0) {
+            dispatch(getUserPostsSuccess(response.data.data));
+        }
+    } catch (error) {
+        console.error(error);
+        dispatch(getUserPostsFailure('Failed to fetch posts.'));
     }
 };
 

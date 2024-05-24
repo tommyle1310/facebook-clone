@@ -19,7 +19,6 @@ const Nav = () => {
     const { theme, toggleTheme } = useTheme();
     const { pathname } = useLocation();
 
-
     const handleStyleActiveTabLink = (type) => {
         return type === '/' && pathname === '/' || type !== '/' && pathname.startsWith(type)
             ? "btn bg-primary join-item hover:bg-secondary"
@@ -145,7 +144,7 @@ const Nav = () => {
                                                                 {
                                                                     item.type === "FRIEND_REQUEST" &&
                                                                     <div className="flex-1 tw-fc gap-1 ">
-                                                                        <div className="tw-jb ">
+                                                                        <div className="flex flex-col items-start ">
                                                                             <h5 className="font-semibold ">{item.message}</h5>
                                                                             <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>
@@ -158,7 +157,7 @@ const Nav = () => {
                                                                 {
                                                                     item.type === "FRIEND_ACCEPT" &&
                                                                     <div className="flex-1 tw-fc gap-1 ">
-                                                                        <div className="tw-jb ">
+                                                                        <div className="flex flex-col items-start ">
                                                                             <h5 className="font-semibold ">{item.message}</h5>
                                                                             <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>
@@ -167,7 +166,16 @@ const Nav = () => {
                                                                 {
                                                                     item.type === "POST_LIKE" &&
                                                                     <div className="flex-1 tw-fc gap-1 ">
-                                                                        <div className="tw-jb ">
+                                                                        <div className="flex flex-col items-start ">
+                                                                            <h5 className="font-semibold ">{item.message}</h5>
+                                                                            <h5 className="text-xs text-primary">{item.timestamp}</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                {
+                                                                    item.type === "POST_COMMENT" &&
+                                                                    <div className="flex-1 tw-fc gap-1 ">
+                                                                        <div className="flex flex-col items-start ">
                                                                             <h5 className="font-semibold ">{item.message}</h5>
                                                                             <h5 className="text-xs text-primary">{item.timestamp}</h5>
                                                                         </div>

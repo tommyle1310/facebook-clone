@@ -7,12 +7,17 @@ import PageNav from '../components/PageNav';
 import useUserData from '../hooks/useUserData'
 import useFetchFriendsData from '../hooks/useFetchFriendsData'
 import { fetchFriendRequests, fetchFriends, fetchUserDataById } from '../app/features/userSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useProfileUserData from '../hooks/useProfileUserData';
 import { useParams } from 'react-router-dom';
+import { getUserPosts } from '../app/features/postSlice';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import useFetchLikedPosts from '../hooks/useFetchLikedPosts';
 
 
 const Profile = () => {
+    const { userPosts } = useSelector(state => state.post)
+
     const dispatch = useDispatch()
     const { id } = useParams()
     const [user] = useUserData()
@@ -24,12 +29,18 @@ const Profile = () => {
         setTotalOfficialFriends(resultAction.payload);
     };
 
+    const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
+
+
+    const fetchUserPosts = async () => {
+        dispatch(getUserPosts(id, user?.id))
+
+    }
 
     useEffect(() => {
         fetchData()
+        fetchUserPosts()
     }, [id])
-
-
     if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
@@ -119,10 +130,26 @@ const Profile = () => {
                                     <FriendSuggestion />
                                 }
                             </div>
-                            <Post />
-                            <Post />
-                            <Post />
-                            <Post />
+                            {
+                                userPosts?.map((item) => (
+                                    <Post
+                                        key={item?.id}
+                                        authorId={item?.author?.id}
+                                        postId={item?.id}
+                                        refetch={fetchUserPosts}
+                                        authorName={item?.author?.name}
+                                        avatarAuthor={item?.author?.profilePic}
+                                        content={item?.content}
+                                        imagePost={item?.imageUrl}
+                                        isInComment={false}
+                                        publicStatus={item?.publicStatus}
+                                        statsData={{ likes: item?.likes, comments: item?.comments }}
+                                        updatedAt={formatDistanceToNow(parseISO(item.updatedAt), { addSuffix: true })}
+                                        isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id && likedItem.userId === user?.id)}
+
+                                    />
+                                ))
+                            }
                         </div>
                     </div>
                 </div>

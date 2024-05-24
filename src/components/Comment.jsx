@@ -8,6 +8,8 @@ import Post from './Post';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPostComments } from '../app/features/postSlice';
 import useUserData from '../hooks/useUserData';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 
 
@@ -27,9 +29,9 @@ const Comment = ({
     handleOnChangeCommentData,
     passImageStringToChild,
     onCloseModalComment,
-    isResetImage
+    isResetImage,
+    updatedAt
 }) => {
-
     const { posts } = useSelector(state => state.post)
     const [user] = useUserData()
 
@@ -53,7 +55,7 @@ const Comment = ({
                 // overlay: 'customOverlay',
             }}
             open={openModalComment} onClose={onCloseModalComment} center>
-            <div className="min-w-96 text-base tw-fc text-white relative">
+            <div className="min-w-96 text-base tw-fc gap-3 text-white relative">
                 <h2 className='text-center text-xl font-bold'>{authorName}'s post</h2>
                 <div className="divider"></div>
                 <Post
@@ -67,10 +69,10 @@ const Comment = ({
                     content={content}
                     imagePost={imagePost}
                     publicStatus={publicStatus}
+                    updatedAt={updatedAt}
                     timestamp='2 days' />
-                <div className="divider"></div>
                 <div className="px-5 tw-fc gap-3">
-                    <div className="w-full p-3 tw-ic gap-3">
+                    <div className="w-full tw-ic gap-3">
                         <Avatar size={8} image={user?.image} />
                         <div className="p-3 bg-base-200 w-full">
                             <label className=" tw-jb gap-2">
@@ -97,19 +99,24 @@ const Comment = ({
                     <h4 className='font-semibol'>Most Relevant</h4>
                     <div className="tw-fc gap-5 pb-5">
                         {postData?.comments?.map((item) => (
-                            <div className="tw-fc gap-2" key={item?.id}>
+                            <div className="tw-fc" key={item?.id}>
                                 <div className="flex gap-2">
-                                    <Avatar size={8} image={item?.author?.profilePic} />
-                                    <div className="p-3 flex-1 bg-neutral rounded-lg tw-fc text-sm">
+                                    <Link to={`/profile/${item?.author?.id}`} className='tooltip' data-tip={item?.author?.name}>
+                                        <Avatar size={8} image={item?.author?.profilePic} />
+                                    </Link>
+                                    <div className="px-3 py-2 flex-1 bg-neutral rounded-lg tw-fc text-sm">
                                         <h5 className='font-bold'>{item?.author?.name}</h5>
                                         <p className='text-xs'>{item?.content}</p>
                                     </div>
                                 </div>
                                 {item?.imageUrl &&
-                                    <div className="w-[30%] ml-10">
-                                        <img className='rounded-md w-full aspect-square object-cover' src={item?.imageUrl} alt="" />
-                                    </div>
+                                    <>
+                                        <div className="w-[30%] ml-10 mt-2">
+                                            <img className='rounded-md w-full aspect-square object-cover' src={item?.imageUrl} alt="" />
+                                        </div>
+                                    </>
                                 }
+                                <div className="ml-12 text-[9px]">{formatDistanceToNow(parseISO(item?.updatedAt), { addSuffix: true })}</div>
                             </div>
                         ))}
                     </div>

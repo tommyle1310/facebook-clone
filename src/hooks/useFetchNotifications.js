@@ -3,6 +3,7 @@ import useUserData from './useUserData';
 import useProfileUserData from './useProfileUserData';
 import { useDispatch } from 'react-redux';
 import { fetchAvatar } from '../app/features/userSlice';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const useFetchNotifications = () => {
     const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const useFetchNotifications = () => {
         const response = await dispatch(fetchAvatar(fromId));
         return response.payload;
     };
-
+    // console.log(profileData);
     const filterAndSetNotifications = useCallback(async () => {
         if (isLoadingProfile) {
             setIsLoading(true);
@@ -38,7 +39,8 @@ const useFetchNotifications = () => {
             const filteredNotifications = profileData.notifications.filter(item =>
                 item.type === "FRIEND_REQUEST" ||
                 item.type === "FRIEND_ACCEPT" ||
-                item.type === "POST_LIKE"
+                item.type === "POST_LIKE" ||
+                item.type === "POST_COMMENT"
             );
 
             // Fetch avatars and set notifications
@@ -53,7 +55,7 @@ const useFetchNotifications = () => {
                     avatar: avatar,
                     message: item.message,
                     read: item.read,
-                    timestamp: item.timestamp
+                    timestamp: formatDistanceToNow(parseISO(item.createdAt), { addSuffix: true })
                 };
             }));
 

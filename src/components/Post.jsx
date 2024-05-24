@@ -17,7 +17,6 @@ const Post = (
         publicStatus = PublicStatus.PUBLIC,
         authorName = 'Tomm Le',
         avatarAuthor = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-        timestamp = '3 days',
         content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat necessitatibus impedit ullam illum fugiat, maxime dicta esse debitis culpa reprehenderit. Aliquam mollitia maxime tenetur repudiandae, magnam modi ullam? Laudantium, nostrum!',
         imagePost = imageSample,
         videoPost = '',
@@ -26,12 +25,12 @@ const Post = (
         isLiked = false,
         refetch,
         statsData = { likes: [], comments: 0, share: 0 },
-        isInComment = false
+        isInComment = false,
+        updatedAt = '0s ago'
     }) => {
     const dispatch = useDispatch()
     useEffect(() => {
     }, [statsData]);
-
 
     const [user] = useUserData()
     const { likedPosts, loading, refetch: refetchLike } = useFetchLikedPosts()
@@ -80,7 +79,6 @@ const Post = (
     const handleClickShare = async () => {
         // console.log('check userID:', user?.id, 'postID:', postId);
     }
-
     const handleSubmitComment = async () => {
         const updatedCommentData = { ...commentData, imageUrl: imageComment };
         await setCommentData(updatedCommentData);
@@ -95,8 +93,6 @@ const Post = (
     };
 
 
-
-
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
             <div className="flex items-center justify-between gap-5 w-full max-md:text-xs">
@@ -109,7 +105,7 @@ const Post = (
                     <div className="flex flex-col">
                         <h5 className='font-semibold'>{authorName}</h5>
                         <div className='flex items-center gap-2'>
-                            {timestamp}
+                            {updatedAt}
                             <div className="text-xs">
                                 {publicStatus === PublicStatus.PUBLIC ? <i className="fa-solid fa-earth-americas"></i> : (
                                     publicStatus === PublicStatus.FRIENDS ? <i className="fa-solid fa-users-rays"></i> :
@@ -126,8 +122,7 @@ const Post = (
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                         </svg>
                     </button>
-                    {isInComment &&
-
+                    {isInComment ||
                         <button className=''>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -187,6 +182,7 @@ const Post = (
                 handleOnChangeCommentData={handleOnChangeCommentData}
                 passImageStringToChild={passImageStringToChild}
                 isResetImage={isResetImage}
+                updatedAt={updatedAt}
             />
         </div>
     )

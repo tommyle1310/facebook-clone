@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getLikedPosts } from '../app/features/postSlice'
 import useUserData from '../hooks/useUserData'
 import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
+import { formatDistanceToNow, parseISO } from 'date-fns'
 
 const Home = () => {
     const [user] = useUserData()
     const [posts, postsLoading, refetchPosts] = useFetchAllPost()
     const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
+    // console.log();
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
             <div className="carousel join carousel-center w-full gap-3 bg-base-300 rounded-box">
@@ -41,6 +43,7 @@ const Home = () => {
                         timestamp='2 days'
                         refetch={refetchPosts}
                         isInComment={false}
+                        updatedAt={formatDistanceToNow(parseISO(item.updatedAt), { addSuffix: true })}
                     />
                 ))
             }
