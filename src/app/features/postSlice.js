@@ -37,6 +37,18 @@ const postSlice = createSlice({
             state.loading = false;
             state.errorMessage = action.payload;
         },
+        addCommentSuccess(state, action) {
+            const { postId, comment } = action.payload;
+            const post = state.posts.find(p => p.id === postId);
+            if (post) {
+                // Initialize comments array if it doesn't exist
+                if (!post.comments) {
+                    post.comments = [];
+                }
+                post.comments.unshift(comment);
+            }
+            state.errorMessage = '';
+        },
         addError(state, action) {
             state.errorMessage = action.payload;
         },
@@ -53,6 +65,7 @@ export const {
     getAllPostsSuccess,
     getAllPostsFailure,
     toggleLikePostSuccess,
+    addCommentSuccess,
     addError,
     clearErrorMessage,
 } = postSlice.actions;
@@ -111,7 +124,6 @@ export const getAllPosts = (userId) => async (dispatch) => {
     try {
         const response = await axios.get(`/posts/${userId}`);
         if (response.data.EC === 0) {
-
             dispatch(getAllPostsSuccess(response.data.data));
         }
     } catch (error) {
@@ -125,11 +137,64 @@ export const getLikedPosts = (userId) => async (dispatch) => {
     try {
         const response = await axios.get(`/posts/${userId}/liked-posts`);
         dispatch(toggleLikePostSuccess(response.data.data));
+        console.log(response.data);
     } catch (error) {
         console.error(error);
         dispatch(getAllPostsFailure('Failed to fetch posts.'));
     }
 };
+
+export const addCommentToPost = ({ userId, postId, commentData }) => async (dispatch) => {
+    try {
+        // Validate the input
+        if (!userId || !postId || !commentData || !commentData.content) {
+            return dispatch(addError('Invalid input data'));
+        }
+        const response = await axios.post('/posts/comment-post', { userId, postId, commentData });
+        if (response.data) {
+            if (response.data.EC === 0) {
+                dispatch(addCommentSuccess({ postId, comment: response.data.data }));
+            } else if (response.data.EC === -3) {
+                dispatch(addError('User not found'));
+            } else {
+                dispatch(addError(response.data.EM || 'Something went wrong on the server, please try again later.'));
+            }
+            return response.data
+        }
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error.response ? error.response.data.error : 'Something went wrong when adding the comment.';
+        dispatch(addError(errorMessage));
+    }
+};
+
+export const getPostComments = (postId) => async (dispatch) => {
+    try {
+        // Dispatch action to set loading state
+        dispatch(getAllPostsRequest());
+
+        // Send request to backend to fetch post comments
+        const response = await axios.get(`/posts/${postId}/comments`);
+
+        // Check if response is successful
+        if (response.data.EC === 0) {
+            // Dispatch action to set post comments
+            dispatch(addCommentSuccess({ postId, comment: response.data.data }));
+        } else if (response.data.EC === -1) {
+            // Dispatch action to handle post not found
+            dispatch(addError('Post not found'));
+        } else {
+            // Dispatch action to handle other errors
+            dispatch(addError(response.data.EM || 'Failed to fetch post comments.'));
+        }
+        return response.data
+    } catch (error) {
+        // Handle network or server errors
+        console.error(error);
+        dispatch(addError('Failed to fetch post comments. Please try again later.'));
+    }
+};
+
 
 // Selectors
 export const selectPost = (state) => state.post;

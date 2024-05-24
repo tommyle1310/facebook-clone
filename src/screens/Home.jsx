@@ -10,8 +10,9 @@ import useUserData from '../hooks/useUserData'
 import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
 
 const Home = () => {
-    const [posts] = useFetchAllPost()
-    const { likedPosts, loading, refetch } = useFetchLikedPosts()
+    const [user] = useUserData()
+    const [posts, postsLoading, refetchPosts] = useFetchAllPost()
+    const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
             <div className="carousel join carousel-center w-full gap-3 bg-base-300 rounded-box">
@@ -28,8 +29,8 @@ const Home = () => {
             {posts?.length > 0 &&
                 posts?.map((item) => (
                     <Post
-                        statsData={{ likes: item?.likes }}
-                        isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id)}
+                        statsData={{ likes: item?.likes, comments: item?.comments }}
+                        isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id && likedItem.userId === user?.id)}
                         key={item?.id} postId={item?.id}
                         authorId={item?.author?.id}
                         authorName={item?.author?.name}
@@ -37,7 +38,10 @@ const Home = () => {
                         content={item?.content}
                         imagePost={item?.imageUrl}
                         publicStatus={item?.publicStatus}
-                        timestamp='2 days' />
+                        timestamp='2 days'
+                        refetch={refetchPosts}
+                        isInComment={false}
+                    />
                 ))
             }
 

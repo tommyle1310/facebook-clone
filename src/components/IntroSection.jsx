@@ -5,7 +5,7 @@ import useUserData from '../hooks/useUserData';
 import { useDispatch } from 'react-redux';
 import { editUserAvatar } from '../app/features/authSlice';
 
-const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
+const IntroSection = ({ isProfilePage, data, permissions, imageAvatar, refetchProfileData }) => {
     const [user] = useUserData()
     const dispatch = useDispatch()
     const [isOpenModalEdit, setIsOpenModalEdit] = useState(false)
@@ -21,6 +21,7 @@ const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
             const response = await dispatch(editUserAvatar({ userId: user?.id, image: imageDataString }))
             if (response?.EC === 0) {
                 setIsOpenModalUploadImage(false)
+                refetchProfileData()
             }
         } else {
             console.log('No image selected.');
@@ -125,7 +126,7 @@ const IntroSection = ({ isProfilePage, data, permissions, imageAvatar }) => {
         <div className="h-80 max-md:h-40 w-full bg-accent rounded-b-xl relative disabled">
             {isProfilePage && (
                 <div className="absolute -bottom-20  border-base-100 left-10 size-40 max-md:size-20 max-md:-bottom-10 overflow-hidden rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                    <img src={imageAvatar} alt={"profile"} />
+                    <img src={imageAvatar} className='bg-cover w-full h-full' alt={"profile"} />
                 </div>
             )}
 

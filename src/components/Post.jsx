@@ -1,37 +1,101 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import useUserData from '../hooks/useUserData'
-import { getAllPosts, toggleLikePost } from '../app/features/postSlice'
-import useFetchAllPost from '../hooks/useFetchPosts'
+import { addCommentToPost, getAllPosts, getPostComments, toggleLikePost } from '../app/features/postSlice'
 import { PublicStatus } from '../helpers/constant'
 import videoSample from '../../public/videos/fast_motion_city.mp4'
+import imageSample from '../../public/images/my_avt.jpg'
 
-const Post = ({
-    publicStatus = PublicStatus.PUBLIC,
-    authorName = 'Tomm Le',
-    avatarAuthor = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
-    timestamp = '3 days',
-    content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat necessitatibus impedit ullam illum fugiat, maxime dicta esse debitis culpa reprehenderit. Aliquam mollitia maxime tenetur repudiandae, magnam modi ullam? Laudantium, nostrum!',
-    imagePost = "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/440856955_484012010859491_7428709411396250070_n.jpg?stp=cp6_dst-jpg&_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeE44JkseRdBcFsjb-OWtD21EBr5UTJzYkMQGvlRMnNiQ-1DXMu7RT7C545YU9pTEb01KRMRMRL_LD689Ngr9WIK&_nc_ohc=q4fJ8HimLQcQ7kNvgH5nfkH&_nc_ht=scontent.fsgn8-4.fna&oh=00_AYAssxsQkUIHXthpRLccgFlXa5I0QQgU74R1IZ55mH9BYQ&oe=664551F1",
-    videoPost = '',
-    authorId,
-    postId,
-    isLiked = false,
-    statsData = { likes: [], comments: 0, share: 0 }
+import useImageUpload from '../hooks/useImageUpload'
+import Comment from './Comment'
+import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
 
-}) => {
+
+const Post = (
+    {
+        publicStatus = PublicStatus.PUBLIC,
+        authorName = 'Tomm Le',
+        avatarAuthor = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
+        timestamp = '3 days',
+        content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat necessitatibus impedit ullam illum fugiat, maxime dicta esse debitis culpa reprehenderit. Aliquam mollitia maxime tenetur repudiandae, magnam modi ullam? Laudantium, nostrum!',
+        imagePost = imageSample,
+        videoPost = '',
+        authorId,
+        postId,
+        isLiked = false,
+        refetch,
+        statsData = { likes: [], comments: 0, share: 0 },
+        isInComment = false
+    }) => {
     const dispatch = useDispatch()
+    useEffect(() => {
+    }, [statsData]);
+
+
     const [user] = useUserData()
+    const { likedPosts, loading, refetch: refetchLike } = useFetchLikedPosts()
+    const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload()
+
+
+
+    const defaultCommentData = {
+        content: '',
+        imageUrl: image || '',
+        videoUrl: '',
+        authorId: user?.id,
+        postId: postId,
+    }
+    const [commentData, setCommentData] = useState(defaultCommentData)
+    const [imageComment, setImageComment] = useState('')
+    const [isResetImage, setIsResetImage] = useState(false)
+
+
+    const [openModalComment, setOpenModalComment] = useState(false);
+    const onOpenModalComment = () => setOpenModalComment(true);
+    const onCloseModalComment = () => setOpenModalComment(false);
+    const handleOnChangeCommentData = (type, value) => {
+        setCommentData((prevData) => ({
+            ...prevData,
+            [type]: value,
+        }));
+    };
+
+    const passImageStringToChild = (image) => {
+        setImageComment(image)
+    }
+
+
     const handleClickLike = async () => {
         dispatch(toggleLikePost({ userId: user?.id, postId }))
+        dispatch(getAllPosts(user?.id))
+        refetch()
     }
     const handleClickComment = async () => {
         // console.log('check userID:', user?.id, 'postID:', postId);
+        if (isInComment === false) {
+            onOpenModalComment()
+        }
     }
     const handleClickShare = async () => {
         // console.log('check userID:', user?.id, 'postID:', postId);
     }
+
+    const handleSubmitComment = async () => {
+        const updatedCommentData = { ...commentData, imageUrl: imageComment };
+        await setCommentData(updatedCommentData);
+        const response = await dispatch(addCommentToPost({ userId: user?.id, postId: postId, commentData: updatedCommentData }));
+        if (response.EC === 0) {
+            setCommentData(defaultCommentData)
+            setIsResetImage(true)
+            dispatch(getAllPosts(user?.id))
+            refetch()
+
+        }
+    };
+
+
+
 
     return (
         <div className=" p-5 flex flex-col bg-base-300 rounded-box gap-2">
@@ -62,11 +126,14 @@ const Post = ({
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                         </svg>
                     </button>
-                    <button className=''>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                    {isInComment &&
+
+                        <button className=''>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    }
                 </div>
             </div>
             <div className="max-md:text-xs">{content}</div>
@@ -87,12 +154,12 @@ const Post = ({
                         <i className="text-warning max-md:text-xs fa-solid fa-face-laugh-squint"></i>
                         <i className="text-primary max-md:text-xs fa-solid fa-thumbs-up"></i>
                         <i className="text-warning max-md:text-xs fa-solid fa-face-sad-tear"></i>
-                        {statsData && statsData?.likes?.length}
+                        {statsData && statsData?.likes?.length || 0}
                     </div>
 
                 </div>
                 <div className="flex items-center gap-5">
-                    <p className='max-md:text-xs'>238 comments</p>
+                    <p onClick={handleClickComment} className='max-md:text-xs tw-hv hover:underline cursor-pointer'>{`${statsData?.comments?.length || 0} comments`}</p>
                     <p className='max-md:text-xs'>9999 shares</p>
                 </div>
             </div>
@@ -101,7 +168,26 @@ const Post = ({
                 <button onClick={handleClickLike} className={`w-1/3 btn  ${isLiked ? 'btn-info' : 'btn-ghost'} flex items-center max-md:text-xs btn-info`}><i className="fa-regular fa-thumbs-up"></i><span className='max-md:hidden'>{isLiked ? 'Liked' : 'Like'}</span></button>
                 <button onClick={handleClickComment} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-comment"></i><span className='max-md:hidden'>comment</span></button>
                 <button onClick={handleClickShare} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-share-from-square"></i><span className='max-md:hidden'>share</span></button>
+
             </div>
+            <Comment
+                openModalComment={openModalComment}
+                onCloseModalComment={onCloseModalComment}
+                statsData={statsData}
+                isLiked={isLiked}
+                postId={postId}
+                authorId={authorId}
+                authorName={authorName}
+                avatarAuthor={avatarAuthor}
+                content={content}
+                imagePost={imagePost}
+                publicStatus={publicStatus}
+                commentData={commentData}
+                handleSubmitComment={handleSubmitComment}
+                handleOnChangeCommentData={handleOnChangeCommentData}
+                passImageStringToChild={passImageStringToChild}
+                isResetImage={isResetImage}
+            />
         </div>
     )
 }

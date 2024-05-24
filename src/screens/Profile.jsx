@@ -17,12 +17,13 @@ const Profile = () => {
     const { id } = useParams()
     const [user] = useUserData()
     const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
-    const [profileData, isLoadingProfile] = useProfileUserData({ userId: id })
+    const [profileData, isLoadingProfile, refetchProfileData] = useProfileUserData({ userId: id })
     const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
     const fetchData = async () => {
         const resultAction = await dispatch(fetchFriends(id));
         setTotalOfficialFriends(resultAction.payload);
     };
+
 
     useEffect(() => {
         fetchData()
@@ -33,7 +34,7 @@ const Profile = () => {
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
-                <IntroSection imageAvatar={user?.image} isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0, friendImages: totalOfficialFriends?.map(item => item.profilePic) }} />
+                <IntroSection refetchProfileData={refetchProfileData} imageAvatar={profileData?.profilePic} isProfilePage data={{ name: profileData?.name, friends: totalOfficialFriends?.length ?? 0, friendImages: totalOfficialFriends?.map(item => item.profilePic) }} />
                 <div className="min-h-screen w-full mt-24 max-md:mt-60">
                     <PageNav />
                     <div className="divider"></div>
@@ -113,8 +114,10 @@ const Profile = () => {
                         <div className="gap-3 tw-fc basis-7/12">
                             <CreateSection />
                             <div className="max-w-[38rem]">
+                                {(profileData?.id === id) &&
 
-                                <FriendSuggestion />
+                                    <FriendSuggestion />
+                                }
                             </div>
                             <Post />
                             <Post />

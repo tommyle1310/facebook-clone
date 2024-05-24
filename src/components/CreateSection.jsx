@@ -99,7 +99,9 @@ const CreateSection = () => {
                             </div>
                             <textarea value={postData.content} onChange={(e) => handleOnChangeInputPostData('content', e.target.value)} className="textarea textarea-primary w-full" placeholder="What's on your mind dog?"></textarea>
                             {image &&
-                                <div className="w-[60%] mx-auto aspect-square bg-base-200 tw-cc">
+                                <div className="w-[60%] mx-auto aspect-square bg-base-200 tw-cc relative">
+                                    <button onClick={resetImage} className="btn btn-sm btn-circle btn-ghost absolute -right-2 top-2">✕</button>
+
                                     <img src={image} className='mx-auto w-[80%] aspect-square' alt={'Your Image'} />
                                 </div>
                             }
