@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Chat from "../../components/Chat";
-import Nav from "../../components/Nav";
+import Nav from "../../components/Nav/Nav";
 import SubbarRight from "../../components/Sidebar/SubbarRight";
 import { useEffect, useState } from "react";
 

@@ -30,7 +30,8 @@ const Comment = ({
     passImageStringToChild,
     onCloseModalComment,
     isResetImage,
-    updatedAt
+    updatedAt,
+    refetch
 }) => {
     const { posts } = useSelector(state => state.post)
     const [user] = useUserData()
@@ -70,6 +71,7 @@ const Comment = ({
                     imagePost={imagePost}
                     publicStatus={publicStatus}
                     updatedAt={updatedAt}
+                    refetch={refetch}
                     timestamp='2 days' />
                 <div className="px-5 tw-fc gap-3">
                     <div className="w-full tw-ic gap-3">
@@ -123,6 +125,7 @@ const Comment = ({
                 </div>
             </div>
         </Modal>
+
     )
 }
 

@@ -32,6 +32,7 @@ const Post = (
     useEffect(() => {
     }, [statsData]);
 
+    // console.log('refetch: ', refetch);
     const [user] = useUserData()
     const { likedPosts, loading, refetch: refetchLike } = useFetchLikedPosts()
     const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload()
@@ -103,7 +104,10 @@ const Post = (
                         </div>
                     </Link>
                     <div className="flex flex-col">
-                        <h5 className='font-semibold'>{authorName}</h5>
+                        <div className="tw-ic gap-3">
+                            <h5 className='font-semibold'>{authorName}</h5>
+                            <div className='max-md:hidden items-start cursor-pointer tw-hv hover:text-primary py-0  text-info  text-sm font-semibold'>Follow</div>
+                        </div>
                         <div className='flex items-center gap-2'>
                             {updatedAt}
                             <div className="text-xs">
@@ -114,7 +118,6 @@ const Post = (
                             </div>
                         </div>
                     </div>
-                    <div className='max-md:hidden items-start cursor-pointer tw-hv hover:text-primary py-0  text-info  text-sm font-semibold'>Follow</div>
                 </div>
                 <div className="gap-3 flex items-center">
                     <button className=''>
@@ -183,6 +186,7 @@ const Post = (
                 passImageStringToChild={passImageStringToChild}
                 isResetImage={isResetImage}
                 updatedAt={updatedAt}
+                refetch={refetch}
             />
         </div>
     )

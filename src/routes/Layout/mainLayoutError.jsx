@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import useTheme from "../../hooks/useTheme";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Chat from "../../components/Chat";
-import Nav from "../../components/Nav";
+import Nav from "../../components/Nav/Nav";
 import SubbarRight from "../../components/Sidebar/SubbarRight";
 
 

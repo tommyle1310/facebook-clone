@@ -16,32 +16,45 @@ import useFetchLikedPosts from '../hooks/useFetchLikedPosts';
 
 
 const Profile = () => {
-    const { userPosts } = useSelector(state => state.post)
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const [user] = useUserData();
+    const { userPosts } = useSelector(state => state.post);
 
-    const dispatch = useDispatch()
-    const { id } = useParams()
-    const [user] = useUserData()
-    const [totalOfficialFriends, setTotalOfficialFriends] = useState([])
-    const [profileData, isLoadingProfile, refetchProfileData] = useProfileUserData({ userId: id })
+    const [totalOfficialFriends, setTotalOfficialFriends] = useState([]);
+    const [profileData, isLoadingProfile, refetchProfileData] = useProfileUserData({ userId: id });
     const [nonFriendsData, nonFriendsLoading] = useFetchFriendsData(id, fetchFriendRequests);
+    const [refetchPostsInteractions, setRefetchPostsInteractions] = useState(false);
+
     const fetchData = async () => {
         const resultAction = await dispatch(fetchFriends(id));
         setTotalOfficialFriends(resultAction.payload);
     };
 
-    const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
-
-
     const fetchUserPosts = async () => {
-        dispatch(getUserPosts(id, user?.id))
+        await dispatch(getUserPosts(id, user?.id));
+    };
 
-    }
+
+    const handleRefetchPostsInteractions = () => {
+        setRefetchPostsInteractions(prev => !prev)
+        fetchUserPosts();
+
+    };
 
     useEffect(() => {
-        fetchData()
-        fetchUserPosts()
-    }, [id])
-    if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc"><span className="pt-20  mx-auto loading loading-spinner text-success"></span></div>
+        fetchData();
+        fetchUserPosts();
+
+    }, [dispatch, id, refetchPostsInteractions]);
+
+
+    const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
+    if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc">
+        <span className="pt-20  mx-auto loading loading-spinner text-success"></span>
+    </div>
+
+
     return (
         <div className='pt-10 max-w-screen-lg mx-auto'>
             <div className="tw-fc  w-full  min-h-screen">
@@ -136,7 +149,7 @@ const Profile = () => {
                                         key={item?.id}
                                         authorId={item?.author?.id}
                                         postId={item?.id}
-                                        refetch={fetchUserPosts}
+                                        refetch={handleRefetchPostsInteractions}
                                         authorName={item?.author?.name}
                                         avatarAuthor={item?.author?.profilePic}
                                         content={item?.content}

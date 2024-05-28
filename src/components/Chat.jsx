@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import hoangAvt from '../../public/images/hoang_avt.jpg'
 import my_avt from '../../public/images/my_avt.jpg'
 
-
 const dataChat = [
     {
         id: 1,
@@ -30,13 +29,12 @@ const dataChat = [
         image: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg',
         link: '/profile/yourprofile',
         chatContent: [
-            { id: 1, sender: true, content: 'Hey there!', status: 'Sent', sentAt: '14:00', image: null, video: null },
-            { id: 2, sender: false, content: 'Hi, how are you?', status: 'Delivered', sentAt: '14:05', image: null, video: null }
+            { id: 3, sender: true, content: 'Hey there!', status: 'Sent', sentAt: '14:00', image: null, video: null },
+            { id: 4, sender: false, content: 'Hi, how are you?', status: 'Delivered', sentAt: '14:05', image: null, video: null }
         ],
         isOnline: true
     },
 ];
-
 
 const Chat = () => {
     const [displayChatBoxes, setDisplayedChatBoxes] = useState([])
@@ -62,6 +60,7 @@ const Chat = () => {
         setDisplayedChatBoxes(copiedDisplayedChatBoxes)
         setDisplayChatUsers([...displayChatUsers, itemInput])
     }
+
     return (
         <div className="fixed bottom-0 z-20 right-0 flex gap-5 flex-row-reverse max-md:hidden">
             <div className="flex flex-col-reverse gap-2 p-3">
@@ -69,7 +68,7 @@ const Chat = () => {
                     displayChatUsers?.slice(-3)?.map(item => (
                         <div onClick={() => { handleClickChatUser(item) }} key={item.id} className={`avatar cursor-pointer ${item.isOnline ? 'online' : null}`}>
                             <div className="w-12 rounded-full">
-                                <img src={item.image} alt={item.name} />
+                                <img src={item.image} alt={item.username} />
                             </div>
                         </div>
                     ))
@@ -97,7 +96,7 @@ const Chat = () => {
                         </div>
                         <div className="flex-1 bg-base-100 overflow-y-auto px-3">
                             {item.chatContent.map(chatItem => (
-                                <div key={item.id} className={`chat ${chatItem.sender ? 'chat-start' : 'chat-end'}`}>
+                                <div key={chatItem.id} className={`chat ${chatItem.sender ? 'chat-start' : 'chat-end'}`}>
                                     {chatItem.sender &&
                                         <div className="chat-image avatar">
                                             <div className="w-6 rounded-full">
@@ -106,7 +105,7 @@ const Chat = () => {
                                         </div>
                                     }
                                     <div className="chat-header text-[8px]">
-                                        <time className=" opacity-50">12:45</time>
+                                        <time className=" opacity-50">{chatItem.sentAt}</time>
                                     </div>
                                     <div className="chat-bubble max-w-[60%] text-xs">{chatItem.content}</div>
                                     <div className="chat-footer opacity-50 text-[8px]">

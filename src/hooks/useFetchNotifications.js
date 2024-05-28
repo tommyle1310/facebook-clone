@@ -70,7 +70,6 @@ const useFetchNotifications = () => {
     useEffect(() => {
         filterAndSetNotifications();
     }, [filterAndSetNotifications]);
-
     return [notifications, isLoading, refetchProfile];
 };
 

@@ -26,7 +26,6 @@ export const fetchNonFriends = createAsyncThunk(
     }
 );
 
-
 export const fetchFriendRequests = createAsyncThunk(
     'user/fetchFriendRequests',
     async (userId) => {
@@ -60,14 +59,29 @@ export const fetchAvatar = createAsyncThunk(
     }
 );
 
-export const accpetFriendRequest = createAsyncThunk(
+export const acceptFriendRequest = createAsyncThunk(
     'user/acceptFriendRequest',
     async ({ userId, friendId }) => {
-        console.log('frind:', friendId);
+        console.log('friend:', friendId);
         const response = await axios.post(`/users/accept-friend-request`, { userId, friendId });
         return response.data;
     }
 );
+
+export const searchFriends = createAsyncThunk(
+    'user/searchFriends',
+    async ({ query }, { getState }) => {
+        console.log(query);
+        const state = getState();
+        const friends = state.user.friends;
+        const filteredFriends = friends.filter(friend =>
+            friend.name.toLowerCase().includes(query.toLowerCase())
+        );
+        return filteredFriends;
+    }
+);
+
+
 
 // Initial state
 const initialState = {
@@ -77,7 +91,8 @@ const initialState = {
     nonFriends: [],
     loadingFriends: false,
     loadingNonFriends: false,
-    loadingFriendRequests: false
+    loadingFriendRequests: false,
+    searchResults: []
 };
 
 // Slice
@@ -97,18 +112,15 @@ const userSlice = createSlice({
             .addCase(fetchFriends.rejected, (state) => {
                 state.loadingFriends = false;
             })
-
-
             .addCase(toggleAddFriend.pending, (state) => {
                 state.loadingNonFriends = true;
             })
-            .addCase(toggleAddFriend.fulfilled, (state, action) => {
+            .addCase(toggleAddFriend.fulfilled, (state) => {
                 state.loadingNonFriends = false;
             })
             .addCase(toggleAddFriend.rejected, (state) => {
                 state.loadingNonFriends = false;
             })
-
             .addCase(fetchFriendRequests.pending, (state) => {
                 state.loadingFriendRequests = true;
             })
@@ -119,8 +131,6 @@ const userSlice = createSlice({
             .addCase(fetchFriendRequests.rejected, (state) => {
                 state.loadingFriendRequests = false;
             })
-
-
             .addCase(fetchNonFriends.pending, (state) => {
                 state.loadingNonFriends = true;
             })
@@ -130,6 +140,9 @@ const userSlice = createSlice({
             })
             .addCase(fetchNonFriends.rejected, (state) => {
                 state.loadingNonFriends = false;
+            })
+            .addCase(searchFriends.fulfilled, (state, action) => {
+                state.searchResults = action.payload;
             });
     },
 });
