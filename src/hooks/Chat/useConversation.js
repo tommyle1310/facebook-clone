@@ -14,7 +14,6 @@ const useConversation = (userId) => {
                 query: { userId }
             });
             setSocket(newSocket);
-
             newSocket.on('initialMessages', (initialMessages) => {
                 setMessages(initialMessages);
                 setLoading(false);
@@ -37,7 +36,6 @@ const useConversation = (userId) => {
             };
         }
     }, [userId]);
-
     const sendMessage = ({ sendTo }) => {
         if (inputMessages[sendTo]?.trim() && socket && userId) {
             const message = {
@@ -47,13 +45,13 @@ const useConversation = (userId) => {
                 createdAt: new Date().toISOString()
             };
             socket.emit('message', message);
-            setInputMessages((prevInputMessages) => ({
-                ...prevInputMessages,
-                [sendTo]: ''
-            }));
             // Recalculate lastMessages after sending the message
             calculateLastMessages();
         }
+        setInputMessages((prevInputMessages) => ({
+            ...prevInputMessages,
+            [sendTo]: ''
+        }));
     };
 
     // Calculate last messages
@@ -75,7 +73,7 @@ const useConversation = (userId) => {
         setLastMessages(lastMsgs);
     };
 
-    return [loading, messages, inputMessages, sendMessage, lastMessages];
-}
+    return [loading, messages, inputMessages, sendMessage, lastMessages, setInputMessages];
+};
 
 export default useConversation;

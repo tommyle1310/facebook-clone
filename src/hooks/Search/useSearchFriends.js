@@ -19,7 +19,6 @@ const useSearchFriends = (userId) => {
             if (userId && searchQuery.trim()) {
                 setLoading(true);
                 const result = await dispatch(searchFriends({ userId, query: searchQuery }));
-                console.log(result.payload);
                 setLocalSearchResults(result.payload);
                 setLoading(false);
             }

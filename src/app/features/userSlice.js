@@ -71,9 +71,9 @@ export const acceptFriendRequest = createAsyncThunk(
 export const searchFriends = createAsyncThunk(
     'user/searchFriends',
     async ({ query }, { getState }) => {
-        console.log(query);
         const state = getState();
         const friends = state.user.friends;
+        // console.log(friends);
         const filteredFriends = friends.filter(friend =>
             friend.name.toLowerCase().includes(query.toLowerCase())
         );

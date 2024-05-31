@@ -4,11 +4,13 @@ import storage from 'redux-persist/lib/storage';
 import { authReducer } from './features/authSlice';
 import { userReducer } from './features/userSlice';
 import { postReducer } from './features/postSlice';
+import { chatReducer } from './features/chatSlice';
 
 const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     post: postReducer,
+    chat: chatReducer,
 });
 
 const persistConfig = {

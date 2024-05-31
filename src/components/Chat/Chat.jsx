@@ -1,61 +1,12 @@
 import { useEffect, useState } from "react";
 import { io } from 'socket.io-client';
-import useUserData from "../../hooks/useUserData";
+import useConversation from "../../hooks/Chat/useConversation";
 import Avatar from "../Avatar";
+import useUserData from "../../hooks/useUserData";
 
 const ChatApp = () => {
-    const [user] = useUserData();
-    const [socket, setSocket] = useState(null);
-    const [messages, setMessages] = useState({});
-    const [inputMessages, setInputMessages] = useState({}); // Separate state for input messages
-
-    useEffect(() => {
-        if (user?.id) {
-            const newSocket = io('http://localhost:8080', {
-                query: { userId: user.id } // Pass the userId with the socket connection
-            });
-            setSocket(newSocket);
-
-            // Listen for initial messages from the server
-            newSocket.on('initialMessages', (initialMessages) => {
-                setMessages(initialMessages);
-            });
-
-            // Listen for incoming messages from the server
-            newSocket.on('message', (message) => {
-                if (message.senderId === user.id || message.receiverId === user.id) {
-                    const otherUserId = message.senderId === user.id ? message.receiverId : message.senderId;
-                    setMessages((prevMessages) => ({
-                        ...prevMessages,
-                        [otherUserId]: [...(prevMessages[otherUserId] || []), message]
-                    }));
-                }
-            });
-
-            // Clean up the socket connection on unmount
-            return () => {
-                newSocket.off('initialMessages');
-                newSocket.off('message');
-                newSocket.close();
-            };
-        }
-    }, [user]);
-
-    const sendMessage = ({ sendTo }) => {
-        if (inputMessages[sendTo]?.trim() && socket && user?.id) {
-            const message = {
-                senderId: user.id,
-                content: inputMessages[sendTo],
-                receiverId: +sendTo, // Replace with actual receiverId from your chat logic
-                createdAt: new Date().toISOString()
-            };
-            socket.emit('message', message);
-            setInputMessages((prevInputMessages) => ({
-                ...prevInputMessages,
-                [sendTo]: '' // Clear the input after sending the message
-            }));
-        }
-    };
+    const [user] = useUserData(); // Assuming useUserData hook is available
+    const [loading, messages, inputMessages, sendMessage, lastMessages, setInputMessages] = useConversation(user?.id);
 
     return (
         <div className="mt-72 tw-ic p-3 gap-3 ">
