@@ -45,7 +45,8 @@ const Profile = () => {
     useEffect(() => {
         fetchData();
         fetchUserPosts();
-
+        const postId = window.location.hash.substring(1);
+        console.log(postId);
     }, [dispatch, id, refetchPostsInteractions]);
 
 
@@ -136,7 +137,10 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className="gap-3 tw-fc basis-7/12">
-                            <CreateSection />
+                            {
+                                user?.id === id &&
+                                <CreateSection />
+                            }
                             <div className="max-w-[38rem]">
                                 {(profileData?.id === id) &&
 

@@ -36,15 +36,32 @@ const useConversation = (userId) => {
             };
         }
     }, [userId]);
-    const sendMessage = ({ sendTo }) => {
-        if (inputMessages[sendTo]?.trim() && socket && userId) {
-            const message = {
-                senderId: userId,
-                content: inputMessages[sendTo],
-                receiverId: +sendTo,
-                createdAt: new Date().toISOString()
-            };
-            socket.emit('message', message);
+
+    const sendMessage = ({ sendTo, messageData }) => {
+        if (socket && userId) {
+            if (messageData.type === 'POST_SHARE' && messageData.listReceiverIds) {
+                // Handle sending POST_SHARE message to multiple receivers
+                messageData.listReceiverIds.forEach(receiverId => {
+                    const message = {
+                        ...messageData,
+                        senderId: userId,
+                        receiverId: receiverId,
+                        createdAt: new Date().toISOString(),
+                        sharedPostId: messageData.sharedPostId, // Reference to the shared post
+
+                    };
+                    socket.emit('message', message);
+                });
+            } else {
+                // Handle sending regular message
+                const message = {
+                    senderId: userId,
+                    content: messageData.content,
+                    receiverId: +sendTo,
+                    createdAt: new Date().toISOString()
+                };
+                socket.emit('message', message);
+            }
             // Recalculate lastMessages after sending the message
             calculateLastMessages();
         }

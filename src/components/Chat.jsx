@@ -5,6 +5,7 @@ import { closeUserChat, selectChat } from '../app/features/chatSlice';
 import useUserData from '../hooks/useUserData';
 import useConversation from '../hooks/Chat/useConversation';
 import { io } from 'socket.io-client';
+import { MessageType } from '../helpers/constant';
 
 const Chat = () => {
     const chatContainerRef = useRef(null);
@@ -32,7 +33,7 @@ const Chat = () => {
             }
         };
     }, []);
-    // console.log(messages);
+    console.log(displayChatBoxes);
     useEffect(() => {
         if (displayChatBoxes.length === 0) {
             setDisplayChatUsers(currentChatUsers);
@@ -52,7 +53,9 @@ const Chat = () => {
                 sender: item.sender,
                 receiver: item.receiver,
                 senderId: item.senderId,
-                receiverId: item.receiverId
+                receiverId: item.receiverId,
+                type: item.type,
+                postData: item.sharedPost
             }));
 
             // Step 1: Filter objArray to get matching items
@@ -79,7 +82,6 @@ const Chat = () => {
 
     useEffect(() => {
         // Scroll to the bottom of the chat container when the chat content changes
-        console.log(chatContainerRef.current);
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
@@ -112,7 +114,13 @@ const Chat = () => {
     };
 
     const handleSendMessage = (userId) => {
-        sendMessage({ sendTo: userId });
+        const messageData = {
+            type: MessageType.DEFAULT, // Set message type to DEFAULT or any other appropriate type
+            content: inputMessages[userId], // Get message content from inputMessages state
+            listReceiverIds: [userId], // Add the userId of the receiver
+            // Add any other necessary data for the message
+        };
+        sendMessage({ sendTo: userId, messageData }); // Pass sendTo and messageData to sendMessage
     };
 
 
@@ -162,7 +170,19 @@ const Chat = () => {
                                     <div className="chat-header  text-[8px]">
                                         <time className=" opacity-50">{chatItem.sentAt}</time>
                                     </div>
-                                    <div className="chat-bubble max-w-[60%]  text-xs">{chatItem.content}</div>
+                                    <div className="chat-bubble max-w-[60%]  text-xs">
+                                        {chatItem.type === MessageType.DEFAULT && chatItem.content}
+                                        {chatItem.type === MessageType.POST_SHARE &&
+                                            <Link to={`/profile/${chatItem.postData.authorId}#${chatItem.postData.id}`} className='lg:w-48 md:w-40 sm:w-36 md  tw-fc gap-3 '>
+                                                <img src={chatItem.postData.imageUrl} alt={chatItem.postData.content} className='h-1/2 aspect-video mx-auto' />
+                                                <div className="flex-1 tw-fc gap-3">
+                                                    <h5 className='text-md font-bold'>{chatItem.postData.authorId}</h5>
+                                                    <p>{chatItem.postData.content}</p>
+                                                </div>
+                                            </Link>
+                                        }
+
+                                    </div>
                                     <div className="chat-footer opacity-50 text-[8px]">
                                         {chatItem.status}
                                     </div>

@@ -10,6 +10,8 @@ import imageSample from '../../public/images/my_avt.jpg'
 import useImageUpload from '../hooks/useImageUpload'
 import Comment from './Comment'
 import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
+import Avatar from './Avatar'
+import Share from './Share'
 
 
 const Post = (
@@ -32,11 +34,9 @@ const Post = (
     useEffect(() => {
     }, [statsData]);
 
-    // console.log('refetch: ', refetch);
     const [user] = useUserData()
     const { likedPosts, loading, refetch: refetchLike } = useFetchLikedPosts()
     const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload()
-
 
 
     const defaultCommentData = {
@@ -54,6 +54,11 @@ const Post = (
     const [openModalComment, setOpenModalComment] = useState(false);
     const onOpenModalComment = () => setOpenModalComment(true);
     const onCloseModalComment = () => setOpenModalComment(false);
+
+    const [openModalShare, setOpenModalShare] = useState(false);
+    const onOpenModalShare = () => setOpenModalShare(true);
+    const onCloseModalShare = () => setOpenModalShare(false);
+
     const handleOnChangeCommentData = (type, value) => {
         setCommentData((prevData) => ({
             ...prevData,
@@ -78,8 +83,11 @@ const Post = (
         }
     }
     const handleClickShare = async () => {
-        // console.log('check userID:', user?.id, 'postID:', postId);
+
+        onOpenModalShare()
     }
+
+
     const handleSubmitComment = async () => {
         const updatedCommentData = { ...commentData, imageUrl: imageComment };
         await setCommentData(updatedCommentData);
@@ -165,9 +173,14 @@ const Post = (
             <div className="join ">
                 <button onClick={handleClickLike} className={`w-1/3 btn  ${isLiked ? 'btn-info' : 'btn-ghost'} flex items-center max-md:text-xs btn-info`}><i className="fa-regular fa-thumbs-up"></i><span className='max-md:hidden'>{isLiked ? 'Liked' : 'Like'}</span></button>
                 <button onClick={handleClickComment} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-comment"></i><span className='max-md:hidden'>comment</span></button>
-                <button onClick={handleClickShare} className='w-1/3 btn  btn-ghost flex items-center max-md:text-xs'><i className="fa-regular fa-share-from-square"></i><span className='max-md:hidden'>share</span></button>
+                <button onClick={handleClickShare} className="w-1/3 btn  btn-ghost flex items-center max-md:text-xs" ><i className="fa-solid fa-share"></i><span>Share</span></button>
 
             </div>
+            <Share
+                openModalShare={openModalShare}
+                onCloseModalShare={onCloseModalShare}
+                postId={postId}
+            />
             <Comment
                 openModalComment={openModalComment}
                 onCloseModalComment={onCloseModalComment}
