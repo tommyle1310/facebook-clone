@@ -33,7 +33,7 @@ const Chat = () => {
             }
         };
     }, []);
-    console.log(displayChatBoxes);
+    // console.log(displayChatBoxes);
     useEffect(() => {
         if (displayChatBoxes.length === 0) {
             setDisplayChatUsers(currentChatUsers);
@@ -174,6 +174,7 @@ const Chat = () => {
                                         {chatItem.type === MessageType.DEFAULT && chatItem.content}
                                         {chatItem.type === MessageType.POST_SHARE &&
                                             <Link to={`/profile/${chatItem.postData.authorId}#${chatItem.postData.id}`} className='lg:w-48 md:w-40 sm:w-36 md  tw-fc gap-3 '>
+                                                <p>{chatItem.content}</p>
                                                 <img src={chatItem.postData.imageUrl} alt={chatItem.postData.content} className='h-1/2 aspect-video mx-auto' />
                                                 <div className="flex-1 tw-fc gap-3">
                                                     <h5 className='text-md font-bold'>{chatItem.postData.authorId}</h5>

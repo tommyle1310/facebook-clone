@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import useUserData from '../hooks/useUserData'
 import { addCommentToPost, getAllPosts, getPostComments, toggleLikePost } from '../app/features/postSlice'
-import { PublicStatus } from '../helpers/constant'
+import { PostType, PublicStatus } from '../helpers/constant'
 import videoSample from '../../public/videos/fast_motion_city.mp4'
 import imageSample from '../../public/images/my_avt.jpg'
 
@@ -12,6 +12,8 @@ import Comment from './Comment'
 import useFetchLikedPosts from '../hooks/useFetchLikedPosts'
 import Avatar from './Avatar'
 import Share from './Share'
+import { PostType as constantPostType } from '../helpers/constant'
+import { formatDistanceToNow, parseISO } from 'date-fns'
 
 
 const Post = (
@@ -28,7 +30,9 @@ const Post = (
         refetch,
         statsData = { likes: [], comments: 0, share: 0 },
         isInComment = false,
-        updatedAt = '0s ago'
+        updatedAt = '0s ago',
+        type = PostType.DEFAULT,
+        repost
     }) => {
     const dispatch = useDispatch()
     useEffect(() => {
@@ -38,7 +42,7 @@ const Post = (
     const { likedPosts, loading, refetch: refetchLike } = useFetchLikedPosts()
     const { image, handleFileInputChange, resetImage, getImageDataString } = useImageUpload()
 
-
+    console.log(repost);
     const defaultCommentData = {
         content: '',
         imageUrl: image || '',
@@ -142,17 +146,53 @@ const Post = (
                     }
                 </div>
             </div>
-            <div className="max-md:text-xs">{content}</div>
-            <div className='aspect-auto'>
-                <img className='w-full h-full object-contain' src={imagePost} alt="" />
-                {videoPost &&
-                    <div className="w-full h-full object-contain">
-                        <video src={videoPost} className="mx-auto  aspect-square" controls>
-                            Your browser does not support the video tag.
-                        </video>
+            {
+                type === constantPostType.DEFAULT &&
+                <>
+                    <div className="max-md:text-xs">{content}</div>
+                    <div className='aspect-auto'>
+                        <img className='w-full h-full object-contain' src={imagePost} alt="" />
+                        {videoPost &&
+                            <div className="w-full h-full object-contain">
+                                <video src={videoPost} className="mx-auto  aspect-square" controls>
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        }
                     </div>
-                }
-            </div>
+                </>
+            }
+            {
+                type === constantPostType.REPOST &&
+                <>
+                    <p>{content}</p>
+                    <div className='tw-fc gap-3 border border-secondary border-opacity-25 p-3 rounded-btn'>
+                        <div className="tw-ic gap-3">
+                            <Link to={`/profile/${repost?.author?.id}`}>
+                                <Avatar image={repost?.author?.profilePic} />
+                            </Link>
+                            <div className="tw-fc">
+                                <div className="tw-ic gap-3">
+                                    <h5 className='font-semibold'>{repost?.author?.name}</h5>
+                                    <div className='max-md:hidden items-start cursor-pointer tw-hv hover:text-primary py-0  text-info  text-xs font-semibold'>Follow</div>
+                                </div>
+                                <p className='text-xs'>{formatDistanceToNow(parseISO(repost?.updatedAt ?? repost?.createdAt ?? '2024-06-03T09:37:33.444Z'), { addSuffix: true })}</p>
+                            </div>
+                        </div>
+                        <div className='aspect-auto'>
+                            <img className='w-full h-full object-contain' src={repost?.imageUrl} alt="" />
+                            {repost?.videoUrl &&
+                                <div className="w-full h-full object-contain">
+                                    <video src={videoPost} className="mx-auto  aspect-square" controls>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </>
+
+            }
             <div className="flex justify-between items-center ">
                 <div className="join gap-1">
                     <div className="tw-ic gap-1">

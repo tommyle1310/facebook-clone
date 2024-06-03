@@ -14,7 +14,7 @@ const Home = () => {
     const [user] = useUserData()
     const [posts, postsLoading, refetchPosts] = useFetchAllPost()
     const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
-    // console.log();
+    // console.log(posts);
     return (
         <div className='pt-20 tw-fc gap-3 w-full md:max-w-2xl'>
             <div className="carousel join carousel-center w-full gap-3 bg-base-300 rounded-box">
@@ -31,6 +31,7 @@ const Home = () => {
             {posts?.length > 0 &&
                 posts?.map((item) => (
                     <Post
+                        type={item?.type}
                         statsData={{ likes: item?.likes, comments: item?.comments }}
                         isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id && likedItem.userId === user?.id)}
                         key={item?.id} postId={item?.id}
@@ -43,6 +44,7 @@ const Home = () => {
                         timestamp='2 days'
                         refetch={refetchPosts}
                         isInComment={false}
+                        repost={item?.repost}
                         updatedAt={formatDistanceToNow(parseISO(item.updatedAt), { addSuffix: true })}
                     />
                 ))

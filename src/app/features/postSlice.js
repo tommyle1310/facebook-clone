@@ -20,6 +20,10 @@ const postSlice = createSlice({
             state.posts.unshift(action.payload);
             state.errorMessage = '';
         },
+        sharePostSuccess(state, action) {
+            state.posts.unshift(action.payload);
+            state.errorMessage = '';
+        },
         getAllPostsRequest(state) {
             state.loading = true;
             state.errorMessage = '';
@@ -75,6 +79,7 @@ const postSlice = createSlice({
 // Export actions
 export const {
     createPostSuccess,
+    sharePostSuccess,
     getAllPostsRequest,
     getAllPostsSuccess,
     getAllPostsFailure,
@@ -222,6 +227,30 @@ export const getPostComments = (postId) => async (dispatch) => {
         // Handle network or server errors
         console.error(error);
         dispatch(addError('Failed to fetch post comments. Please try again later.'));
+    }
+};
+
+export const sharePost = ({ userId, postData }) => async (dispatch) => {
+    try {
+        // Validate the input
+        if (!userId || !postData) {
+            return dispatch(addError('Invalid input data'));
+        }
+        const response = await axios.post('/posts/share', { userId, postData });
+        if (response.data) {
+            if (response.data.EC === 0) {
+                dispatch(sharePostSuccess(response.data.post));
+            } else if (response.data.EC === -3) {
+                dispatch(addError('User not found'));
+            } else {
+                dispatch(addError(response.data.EM || 'Something went wrong on the server, please try again later.'));
+            }
+            return response.data
+        }
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error.response ? error.response.data.error : 'Something went wrong when sharing the post.';
+        dispatch(addError(errorMessage));
     }
 };
 

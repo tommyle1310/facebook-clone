@@ -6,19 +6,29 @@ import { useDispatch } from 'react-redux'
 import { fetchFriends } from '../app/features/userSlice'
 import useFetchFriendsData from '../hooks/useFetchFriendsData'
 import useConversation from '../hooks/Chat/useConversation'
-import { MessageType } from '../helpers/constant'
+import { MessageType, PostType, PublicStatus } from '../helpers/constant'
+import { sharePost } from '../app/features/postSlice'
 
 const Share = ({
     openModalShare,
     onCloseModalShare,
     postId,
 }) => {
+    const dispatch = useDispatch()
     const [user] = useUserData()
     const [selectedPublicStatus, setSelectedPublicStatus] = useState(0)
     const [listFriends, listFriendsLoading, refetchListFriends] = useFetchFriendsData(user?.id, fetchFriends);
     const [listSelectedFriendsToShare, setListSelectedFriendsToShare] = useState([]);
     const [loading, messages, inputMessages, sendMessage, lastMessages, setInputMessages] = useConversation(user.id);
     const [shareText, setShareText] = useState('')
+
+    const defaultSharedPostData = {
+        content: '',
+        groupId: null,
+        publicStatus: PostType.DEFAULT
+    }
+
+    const [sharedPostData, setSharedPostData] = useState(defaultSharedPostData)
 
     const handleClickFriendToShare = (item) => {
         const checkFriendAlreadyExists = listSelectedFriendsToShare.some(eachFriend => eachFriend.id === item.id);
@@ -49,6 +59,39 @@ const Share = ({
             await sendMessage({ sendTo: friend.id, messageData }); // Pass sendTo and messageData to sendMessage
         });
     };
+
+    const handleSubmitRepost = async () => {
+        switch (selectedPublicStatus) {
+            case 0:
+                sharedPostData.publicStatus = PublicStatus.PUBLIC;
+                break;
+            case 1:
+                sharedPostData.publicStatus = PublicStatus.FRIENDS;
+                break;
+            case 2:
+                sharedPostData.publicStatus = PublicStatus.PRIVATE;
+                break;
+            default:
+                sharedPostData.publicStatus = PublicStatus.PUBLIC;
+                break;
+        }
+        // Assuming there's more code to handle the actual submission of the post
+        sharedPostData.content = shareText
+        sharedPostData.type = PostType.REPOST
+        sharedPostData.id = postId
+        sharedPostData.repostId = postId
+        try {
+
+            const response = await dispatch(sharePost({ userId: user?.id, postData: sharedPostData }));
+            console.log(response);
+            if (response.EC === 0) {
+                setSharedPostData(defaultSharedPostData)
+                onCloseModalShare()
+            }
+        } catch (error) {
+            console.error('Error creating post:', error);
+        }
+    }
 
 
 
@@ -90,7 +133,7 @@ const Share = ({
                     </div>
                     <textarea value={shareText} onChange={e => setShareText(e.target.value)} className="textarea textarea-ghost w-full" placeholder="Say something about this..."></textarea>
                     <div className="flex lg:justify-end">
-                        <button className='btn btn-primary lg:w-1/3'>Share Now</button>
+                        <button onClick={handleSubmitRepost} className='btn btn-primary lg:w-1/3'>Share Now</button>
                     </div>
                 </div>
                 <div className="divider">

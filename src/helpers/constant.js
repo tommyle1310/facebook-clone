@@ -9,3 +9,11 @@ export const MessageType = {
     POST_SHARE: 'POST_SHARE',// Message containing a shared post
     GROUP_INVITE: 'GROUP_INVITE' // Message containing a group invitation
 }
+
+export const PostType = {
+    DEFAULT: 'DEFAULT',
+    REPOST: 'REPOST',
+    EVENT: 'EVENT',
+    STORY: 'STORY',
+    REVIEW: 'REVIEW'
+}
