@@ -48,8 +48,7 @@ const Profile = () => {
         const postId = window.location.hash.substring(1);
         console.log(postId);
     }, [dispatch, id, refetchPostsInteractions]);
-
-
+    console.log(userPosts);
     const { likedPosts, loading, refetchLikedPosts } = useFetchLikedPosts()
     if (isLoadingProfile) return <div className="w-full min-h-screen tw-cc">
         <span className="pt-20  mx-auto loading loading-spinner text-success"></span>
@@ -103,35 +102,11 @@ const Profile = () => {
                                 </div>
                                 <h5 className='text-lg'>13180 friends</h5>
                                 <div className="grid grid-cols-3 gap-1 ">
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
-                                    <div className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
-                                        <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
-                                    </div>
+                                    {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(item => (
+                                        <div key={item} className="bg-base-100 mb-10 p-4 aspect-square rounded-btn relative">
+                                            <p className='absolute -bottom-6 left-2 font-semibold'>aso</p>
+                                        </div>
+                                    ))}
                                 </div>
 
                             </div>
@@ -163,6 +138,8 @@ const Profile = () => {
                                         statsData={{ likes: item?.likes, comments: item?.comments }}
                                         updatedAt={formatDistanceToNow(parseISO(item.updatedAt), { addSuffix: true })}
                                         isLiked={likedPosts?.some(likedItem => likedItem?.post?.id === item?.id && likedItem.userId === user?.id)}
+                                        repost={item?.repost}
+                                        type={item?.type}
 
                                     />
                                 ))
